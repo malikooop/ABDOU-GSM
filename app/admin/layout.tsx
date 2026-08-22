@@ -29,18 +29,38 @@ export default function AdminLayout({
   useEffect(() => {
     checkAuth()
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) router.replace('/login')
+    // Re-check on every auth state change, not just sign-out: if the
+    // session changes to a different (non-admin) account, the admin UI
+    // must not keep rendering under the old assumption.
+    const { data: listener } = supabase.auth.onAuthStateChange(() => {
+      checkAuth()
     })
 
     return () => listener.subscription.unsubscribe()
   }, [])
 
+  // This mirrors the real boundary (middleware.ts + RLS on `profiles`),
+  // it does not replace it. A logged-out or non-admin request never even
+  // reaches this component in normal navigation — this only covers the
+  // case where a session's admin status changes *while* already on an
+  // admin page (e.g. a revoked admin flag, or a stale client-side cache),
+  // since only the server can be trusted for the first-load decision.
   async function checkAuth() {
-    const { data } = await supabase.auth.getSession()
+    const { data } = await supabase.auth.getUser()
 
-    if (!data.session) {
+    if (!data.user) {
       router.replace('/login')
+      return
+    }
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('is_admin')
+      .eq('id', data.user.id)
+      .maybeSingle()
+
+    if (!profile?.is_admin) {
+      router.replace('/')
       return
     }
 

@@ -1,0 +1,555 @@
+diff --git a/app/admin/layout.tsx b/app/admin/layout.tsx
+index c0ff5a5..4080172 100644
+--- a/app/admin/layout.tsx
++++ b/app/admin/layout.tsx
+@@ -29,21 +29,41 @@ export default function AdminLayout({
+   useEffect(() => {
+     checkAuth()
+ 
+-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+-      if (!session) router.replace('/login')
++    // Re-check on every auth state change, not just sign-out: if the
++    // session changes to a different (non-admin) account, the admin UI
++    // must not keep rendering under the old assumption.
++    const { data: listener } = supabase.auth.onAuthStateChange(() => {
++      checkAuth()
+     })
+ 
+     return () => listener.subscription.unsubscribe()
+   }, [])
+ 
++  // This mirrors the real boundary (middleware.ts + RLS on `profiles`),
++  // it does not replace it. A logged-out or non-admin request never even
++  // reaches this component in normal navigation — this only covers the
++  // case where a session's admin status changes *while* already on an
++  // admin page (e.g. a revoked admin flag, or a stale client-side cache),
++  // since only the server can be trusted for the first-load decision.
+   async function checkAuth() {
+-    const { data } = await supabase.auth.getSession()
++    const { data } = await supabase.auth.getUser()
+ 
+-    if (!data.session) {
++    if (!data.user) {
+       router.replace('/login')
+       return
+     }
+ 
++    const { data: profile } = await supabase
++      .from('profiles')
++      .select('is_admin')
++      .eq('id', data.user.id)
++      .maybeSingle()
++
++    if (!profile?.is_admin) {
++      router.replace('/')
++      return
++    }
++
+     setCheckingAuth(false)
+   }
+ 
+diff --git a/app/robots.ts b/app/robots.ts
+index be1df58..b1829b9 100644
+--- a/app/robots.ts
++++ b/app/robots.ts
+@@ -5,7 +5,11 @@ export default function robots(): MetadataRoute.Robots {
+     rules: {
+       userAgent: '*',
+       allow: '/',
++      // /admin is already blocked server-side for anyone who isn't a
++      // signed-in admin (middleware.ts); this just keeps it out of search
++      // engine indexes/crawls too, as defense in depth.
++      disallow: ['/admin', '/admin/'],
+     },
+     sitemap: 'https://abdougsm.com/sitemap.xml',
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/lib/auth/require-admin.ts b/lib/auth/require-admin.ts
+new file mode 100644
+index 0000000..501cfe8
+--- /dev/null
++++ b/lib/auth/require-admin.ts
+@@ -0,0 +1,73 @@
++import { redirect } from 'next/navigation'
++import { createClient } from '@/lib/supabase-server'
++import type { User } from '@supabase/supabase-js'
++
++/**
++ * Centralized server-side authorization for admin-only work.
++ *
++ * `proxy.ts` already blocks unauthorized requests to `/admin/*`
++ * before they render, but a routing-level gate is not a substitute for
++ * checking authorization again at the point where a sensitive action
++ * actually happens — this is the primitive for that.
++ * Today no Server Action or Route Handler exists yet (every admin
++ * mutation still goes through Supabase RLS directly from the client), but
++ * if one is added later it MUST call one of these instead of
++ * re-implementing an auth check inline, so there is exactly one place
++ * that defines "is this user an admin."
++ *
++ * Both functions independently re-verify the user against Supabase's auth
++ * server (`getUser()`, never `getSession()`) and re-check `is_admin` from
++ * `profiles` — they never trust a client-supplied flag, header, or cached
++ * value.
++ */
++
++export interface AdminContext {
++  user: User
++}
++
++/** Returns the authenticated user, or `null` if there isn't one. Never throws. */
++export async function getAuthUser(): Promise<User | null> {
++  const supabase = await createClient()
++  const {
++    data: { user },
++  } = await supabase.auth.getUser()
++  return user
++}
++
++/**
++ * Returns `{ user }` only if the current request belongs to a signed-in
++ * admin (per `profiles.is_admin`). Returns `null` for anyone else —
++ * unauthenticated, authenticated-but-not-admin, or on any Supabase error
++ * (fails closed).
++ */
++export async function getAdminContext(): Promise<AdminContext | null> {
++  const supabase = await createClient()
++  const {
++    data: { user },
++  } = await supabase.auth.getUser()
++
++  if (!user) return null
++
++  const { data: profile, error } = await supabase
++    .from('profiles')
++    .select('is_admin')
++    .eq('id', user.id)
++    .maybeSingle()
++
++  if (error || !profile?.is_admin) return null
++
++  return { user }
++}
++
++/**
++ * Use at the top of a Server Action or Route Handler that performs an
++ * admin-only mutation. Redirects (never just hides UI) if the caller
++ * isn't an authorized admin, and returns the admin context otherwise.
++ */
++export async function requireAdmin(): Promise<AdminContext> {
++  const context = await getAdminContext()
++  if (!context) {
++    redirect('/login')
++  }
++  return context
++}
+diff --git a/middleware.ts.bak b/middleware.ts.bak
+deleted file mode 100644
+index 29a89a0..0000000
+--- a/middleware.ts.bak
++++ /dev/null
+@@ -1,57 +0,0 @@
+-import { NextResponse } from 'next/server'
+-import type { NextRequest } from 'next/server'
+-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+-
+-export async function middleware(request: NextRequest) {
+-  let response = NextResponse.next()
+-
+-  const supabase = createServerClient(
+-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+-    {
+-      cookies: {
+-        get(name: string) {
+-          return request.cookies.get(name)?.value
+-        },
+-        set(name: string, value: string, options: CookieOptions) {
+-          response.cookies.set({ name, value, ...options })
+-        },
+-        remove(name: string, options: CookieOptions) {
+-          response.cookies.set({ name, value: '', ...options, maxAge: 0 })
+-        },
+-      },
+-    },
+-  )
+-
+-  // getUser() (not getSession()) — validates the token against Supabase's
+-  // auth server instead of trusting the cookie as-is. This is Supabase's
+-  // own recommendation for any server-side code that makes an
+-  // authorization decision (middleware, Server Components).
+-  const {
+-    data: { user },
+-  } = await supabase.auth.getUser()
+-
+-  const pathname = request.nextUrl.pathname
+-
+-  if (pathname === '/login') {
+-    if (user) {
+-      return NextResponse.redirect(new URL('/admin/dashboard', request.url))
+-    }
+-    return response
+-  }
+-
+-  if (pathname.startsWith('/admin')) {
+-    if (!user) {
+-      return NextResponse.redirect(new URL('/login', request.url))
+-    }
+-  }
+-
+-  return response
+-}
+-
+-export const config = {
+-  // Both routes now matched — "/login" needs to run through the middleware
+-  // too, otherwise the "already logged in → redirect away from /login"
+-  // branch above is unreachable dead code.
+-  matcher: ['/admin/:path*', '/login'],
+-}
+\ No newline at end of file
+diff --git a/next.config.mjs b/next.config.mjs
+index 9390222..d029200 100644
+--- a/next.config.mjs
++++ b/next.config.mjs
+@@ -3,6 +3,27 @@ const nextConfig = {
+   images: {
+     unoptimized: true,
+   },
++  async headers() {
++    return [
++      {
++        // Applies to every route. These are safe, non-breaking baseline
++        // protections — none of them change existing behavior for a
++        // normal request.
++        source: '/:path*',
++        headers: [
++          // Prevents the admin login page (or any page) from being
++          // framed by another site for clickjacking.
++          { key: 'X-Frame-Options', value: 'DENY' },
++          // Stops the browser from MIME-sniffing responses away from
++          // their declared Content-Type.
++          { key: 'X-Content-Type-Options', value: 'nosniff' },
++          // Sends the full referrer only to same-origin requests, an
++          // origin-only referrer cross-origin, and nothing on downgrade.
++          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
++        ],
++      },
++    ]
++  },
+ }
+ 
+-export default nextConfig
+\ No newline at end of file
++export default nextConfig
+diff --git a/proxy.ts b/proxy.ts
+new file mode 100644
+index 0000000..a564194
+--- /dev/null
++++ b/proxy.ts
+@@ -0,0 +1,90 @@
++import { NextResponse } from 'next/server'
++import type { NextRequest } from 'next/server'
++import { createServerClient, type CookieOptions } from '@supabase/ssr'
++
++/**
++ * Server-side gate for /admin (Next.js Proxy — the renamed-from-Middleware
++ * convention as of Next.js 16).
++ *
++ * This is the FIRST line of defense: it rejects unauthenticated and
++ * non-admin requests before the Next.js app ever renders an admin page or
++ * ships its client bundle. It is not the ONLY line of defense — every
++ * admin page is a Client Component that talks to Supabase directly with
++ * the anon key, so the real, unconditional boundary is Postgres RLS (see
++ * supabase/migrations/0001_admin_authorization_and_rls.sql). This proxy
++ * exists to stop unauthorized users from ever reaching the admin UI at
++ * all, not to replace RLS.
++ */
++export async function proxy(request: NextRequest) {
++  const response = NextResponse.next()
++
++  const supabase = createServerClient(
++    process.env.NEXT_PUBLIC_SUPABASE_URL!,
++    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
++    {
++      cookies: {
++        get(name: string) {
++          return request.cookies.get(name)?.value
++        },
++        set(name: string, value: string, options: CookieOptions) {
++          response.cookies.set({ name, value, ...options })
++        },
++        remove(name: string, options: CookieOptions) {
++          response.cookies.set({ name, value: '', ...options, maxAge: 0 })
++        },
++      },
++    },
++  )
++
++  // getUser() (not getSession()) — validates the token against Supabase's
++  // auth server instead of trusting the cookie as-is. This is Supabase's
++  // own recommendation for any server-side code that makes an
++  // authorization decision (proxy, Server Components).
++  const {
++    data: { user },
++  } = await supabase.auth.getUser()
++
++  // Authentication alone is never enough — a normal signed-in user must
++  // not reach /admin. `profiles.is_admin` is readable by the user for
++  // their own row only (see migration), so this query can't be used to
++  // probe other accounts.
++  let isAdmin = false
++  if (user) {
++    const { data: profile } = await supabase
++      .from('profiles')
++      .select('is_admin')
++      .eq('id', user.id)
++      .maybeSingle()
++    isAdmin = profile?.is_admin === true
++  }
++
++  const pathname = request.nextUrl.pathname
++
++  if (pathname === '/login') {
++    // Only send a confirmed admin away from the login page — a signed-in
++    // non-admin user still needs to see it (e.g. to sign out and try a
++    // different account), not get silently bounced into a dashboard they
++    // can't use.
++    if (isAdmin) {
++      return NextResponse.redirect(new URL('/admin/dashboard', request.url))
++    }
++    return response
++  }
++
++  if (pathname.startsWith('/admin')) {
++    if (!user) {
++      return NextResponse.redirect(new URL('/login', request.url))
++    }
++    if (!isAdmin) {
++      return NextResponse.redirect(new URL('/', request.url))
++    }
++  }
++
++  return response
++}
++
++export const config = {
++  // "/login" is matched too, otherwise the "already-admin → redirect away
++  // from /login" branch above is unreachable dead code.
++  matcher: ['/admin/:path*', '/login'],
++}
+diff --git a/supabase/migrations/0001_admin_authorization_and_rls.sql b/supabase/migrations/0001_admin_authorization_and_rls.sql
+new file mode 100644
+index 0000000..7af6b35
+--- /dev/null
++++ b/supabase/migrations/0001_admin_authorization_and_rls.sql
+@@ -0,0 +1,208 @@
++-- ABDOU GSM — Admin authorization + Row Level Security
++--
++-- WHY THIS MIGRATION EXISTS
++-- --------------------------
++-- Every write in this app (phones insert/update/delete, settings update,
++-- phone-images/site-assets storage upload/remove) happens directly from the
++-- browser bundle using the public anon key — there are no Next.js API
++-- routes. That means Postgres RLS is the ONLY real enforcement boundary:
++-- anyone who calls the Supabase REST/Storage API directly (curl, Postman,
++-- devtools, a re-implemented client) bypasses every check in the Next.js
++-- app entirely. Fixing the frontend without fixing this would not actually
++-- secure anything.
++--
++-- WHAT THIS MIGRATION DOES
++-- --------------------------
++-- 1. Creates `public.profiles`, a 1:1 table with `auth.users` holding a
++--    single `is_admin` boolean. Every new signup gets a profile row via
++--    trigger, defaulting to `is_admin = false` — so authentication alone
++--    can never grant admin access, satisfying "no way for a normal user to
++--    become an administrator."
++-- 2. Adds a small `public.is_admin()` helper (SECURITY DEFINER, so it can
++--    read `profiles` safely from within other tables' policies without
++--    recursive-RLS problems) used by every write policy below.
++-- 3. Enables RLS on `phones` and `settings` (public SELECT stays open —
++--    this is a public catalog site — INSERT/UPDATE/DELETE require
++--    `is_admin()`).
++-- 4. Adds storage.objects policies scoping `phone-images` and
++--    `site-assets` uploads/updates/deletes to admins only. SELECT is left
++--    public since these buckets back publicly displayed images.
++--
++-- WHAT THIS MIGRATION DOES NOT DO
++-- --------------------------
++-- - Does not touch, rename, or drop any existing table or column.
++-- - Does not delete or modify any existing row in `phones` or `settings`.
++-- - Does not run under `service_role` and does not embed any secret.
++--
++-- REQUIRED MANUAL STEP AFTER RUNNING THIS
++-- --------------------------
++-- This migration cannot know which existing Supabase Auth user is your
++-- admin. After running it, every existing user (including your own admin
++-- account) defaults to `is_admin = false` and will be locked out of
++-- /admin until you run, once, in the SQL editor:
++--
++--   update public.profiles set is_admin = true
++--   where id = (select id from auth.users where email = 'YOUR_ADMIN_EMAIL');
++--
++-- Run this whole file in the Supabase SQL Editor (or via the Supabase CLI:
++-- `supabase db push`), then run the statement above with your real admin
++-- email.
++
++-- 1. profiles table -----------------------------------------------------
++
++create table if not exists public.profiles (
++  id uuid primary key references auth.users (id) on delete cascade,
++  is_admin boolean not null default false,
++  created_at timestamptz not null default now()
++);
++
++alter table public.profiles enable row level security;
++
++-- A user may read only their own profile row (needed so the app itself,
++-- and the is_admin() helper below, can evaluate "am I admin?" for the
++-- currently authenticated user).
++drop policy if exists "profiles_select_own" on public.profiles;
++create policy "profiles_select_own"
++  on public.profiles
++  for select
++  to authenticated
++  using (id = auth.uid());
++
++-- Deliberately no INSERT/UPDATE/DELETE policy for regular users: profile
++-- rows are created only by the trigger below (as SECURITY DEFINER, so it
++-- runs with elevated privilege regardless of RLS), and `is_admin` must
++-- only ever be flipped manually by you by running SQL directly with your
++-- own database credentials, never via a client request.
++
++-- 2. Auto-create a (non-admin) profile row for every new signup ---------
++
++create or replace function public.handle_new_user()
++returns trigger
++language plpgsql
++security definer
++set search_path = public
++as $$
++begin
++  insert into public.profiles (id, is_admin)
++  values (new.id, false)
++  on conflict (id) do nothing;
++  return new;
++end;
++$$;
++
++drop trigger if exists on_auth_user_created on auth.users;
++create trigger on_auth_user_created
++  after insert on auth.users
++  for each row execute function public.handle_new_user();
++
++-- Backfill: give every EXISTING auth user a profile row too (defaults to
++-- is_admin = false — including your own account, until you run the manual
++-- step in the header comment above). Safe: only inserts missing rows,
++-- never touches an existing profiles row.
++insert into public.profiles (id, is_admin)
++select id, false from auth.users
++on conflict (id) do nothing;
++
++-- 3. is_admin() helper ----------------------------------------------------
++
++create or replace function public.is_admin()
++returns boolean
++language sql
++security definer
++stable
++set search_path = public
++as $$
++  select coalesce(
++    (select is_admin from public.profiles where id = auth.uid()),
++    false
++  );
++$$;
++
++grant execute on function public.is_admin() to authenticated, anon;
++
++-- 4. phones — public read, admin-only write -------------------------------
++
++alter table public.phones enable row level security;
++
++drop policy if exists "phones_select_public" on public.phones;
++create policy "phones_select_public"
++  on public.phones
++  for select
++  to anon, authenticated
++  using (true);
++
++drop policy if exists "phones_insert_admin" on public.phones;
++create policy "phones_insert_admin"
++  on public.phones
++  for insert
++  to authenticated
++  with check (public.is_admin());
++
++drop policy if exists "phones_update_admin" on public.phones;
++create policy "phones_update_admin"
++  on public.phones
++  for update
++  to authenticated
++  using (public.is_admin())
++  with check (public.is_admin());
++
++drop policy if exists "phones_delete_admin" on public.phones;
++create policy "phones_delete_admin"
++  on public.phones
++  for delete
++  to authenticated
++  using (public.is_admin());
++
++-- 5. settings — public read (site name/logo/contact info are shown
++--    publicly), admin-only write ------------------------------------------
++
++alter table public.settings enable row level security;
++
++drop policy if exists "settings_select_public" on public.settings;
++create policy "settings_select_public"
++  on public.settings
++  for select
++  to anon, authenticated
++  using (true);
++
++drop policy if exists "settings_update_admin" on public.settings;
++create policy "settings_update_admin"
++  on public.settings
++  for update
++  to authenticated
++  using (public.is_admin())
++  with check (public.is_admin());
++
++-- No public insert/delete policy for settings: the app only ever updates
++-- the single existing row (id = 1) and never creates or removes rows.
++
++-- 6. storage — phone-images & site-assets: public read, admin-only write --
++
++drop policy if exists "storage_select_public_assets" on storage.objects;
++create policy "storage_select_public_assets"
++  on storage.objects
++  for select
++  to anon, authenticated
++  using (bucket_id in ('phone-images', 'site-assets'));
++
++drop policy if exists "storage_insert_admin_assets" on storage.objects;
++create policy "storage_insert_admin_assets"
++  on storage.objects
++  for insert
++  to authenticated
++  with check (bucket_id in ('phone-images', 'site-assets') and public.is_admin());
++
++drop policy if exists "storage_update_admin_assets" on storage.objects;
++create policy "storage_update_admin_assets"
++  on storage.objects
++  for update
++  to authenticated
++  using (bucket_id in ('phone-images', 'site-assets') and public.is_admin())
++  with check (bucket_id in ('phone-images', 'site-assets') and public.is_admin());
++
++drop policy if exists "storage_delete_admin_assets" on storage.objects;
++create policy "storage_delete_admin_assets"
++  on storage.objects
++  for delete
++  to authenticated
++  using (bucket_id in ('phone-images', 'site-assets') and public.is_admin());
