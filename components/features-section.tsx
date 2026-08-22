@@ -44,7 +44,7 @@ export function FeaturesSection() {
                 <Icon className="size-6" aria-hidden="true" />
               </span>
 
-              <h3 className="mt-6 font-display text-xl font-bold tracking-tight text-foreground">
+              <h3 className="mt-6 font-display text-xl font-bold text-foreground">
                 {item.title}
               </h3>
 

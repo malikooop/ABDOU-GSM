@@ -47,7 +47,7 @@ export function HeroSection({ phones }: { phones: Phone[] }) {
             {dict.hero.badge}
           </span>
 
-          <h1 className="mt-5 text-balance font-display text-5xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
+          <h1 className="mt-5 text-balance font-display text-5xl font-bold leading-[1.15] text-foreground sm:text-6xl lg:text-7xl">
             {dict.hero.title}
           </h1>
 
@@ -81,7 +81,7 @@ export function HeroSection({ phones }: { phones: Phone[] }) {
           <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
             <Link
               href="/phones"
-              className="gradient-primary animate-pulse-glow inline-flex h-12 items-center gap-2 rounded-full px-7 text-sm font-semibold text-white transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
+              className="gradient-primary glow-primary inline-flex h-12 items-center gap-2 rounded-full px-7 text-sm font-semibold text-white transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_20px_45px_-12px_color-mix(in_srgb,var(--primary)_55%,transparent)] active:scale-[0.98]"
             >
               <Smartphone className="size-4" aria-hidden="true" />
               {dict.hero.exploreCta}
@@ -138,7 +138,7 @@ export function HeroSection({ phones }: { phones: Phone[] }) {
                 </div>
               </div>
 
-              <div className="glass-panel animate-float absolute end-0 top-2 rounded-2xl px-5 py-4 shadow-elevation-md">
+              <div className="glass-panel animate-float-slow absolute end-0 top-2 rounded-2xl px-5 py-4 shadow-elevation-md">
                 <div className="flex items-center gap-2">
                   <AbdouScore score={primary.score} size="sm" />
                   <div>

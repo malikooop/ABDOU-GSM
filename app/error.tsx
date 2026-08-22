@@ -39,7 +39,7 @@ export default function Error({
         <Button
           onClick={reset}
           size="lg"
-          className="bg-primary font-semibold text-primary-foreground transition-transform hover:bg-primary/90 active:scale-95"
+          className="rounded-full bg-primary font-semibold text-primary-foreground transition-transform hover:bg-primary/90 active:scale-95"
         >
           <RotateCw className="size-4" aria-hidden="true" />
           إعادة المحاولة

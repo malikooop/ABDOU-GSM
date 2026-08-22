@@ -98,7 +98,7 @@ export function SiteHeader() {
 
           <Button
             variant="outline"
-            className="hidden border-primary/25 font-semibold text-primary transition-transform duration-200 hover:bg-primary/5 hover:border-primary/40 active:scale-95 sm:inline-flex"
+            className="hidden rounded-full border-primary/25 font-semibold text-primary transition-transform duration-200 hover:border-primary/40 hover:bg-primary/5 active:scale-95 sm:inline-flex"
             size="lg"
             nativeButton={false}
             render={<Link href="/#abdou-ai" />}
@@ -165,7 +165,7 @@ export function SiteHeader() {
 
             <Button
               variant="outline"
-              className="mt-2 w-full border-primary/25 font-semibold text-primary hover:bg-primary/5 hover:border-primary/40"
+              className="mt-2 w-full rounded-full border-primary/25 font-semibold text-primary hover:border-primary/40 hover:bg-primary/5"
               size="lg"
               nativeButton={false}
               render={<Link href="/#abdou-ai" onClick={() => setOpen(false)} />}

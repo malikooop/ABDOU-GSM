@@ -79,7 +79,7 @@ export function AiTeaser({ phones }: { phones: Phone[] }) {
               <Sparkles className="size-3.5" aria-hidden="true" />
               ABDOU AI
             </span>
-            <h2 className="mt-4 text-balance font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
+            <h2 className="mt-4 text-balance font-display text-3xl font-bold leading-[1.3] sm:text-4xl">
               {dict.aiTeaser.title}
             </h2>
             <p className="mt-4 max-w-md text-pretty text-base leading-relaxed text-background/70">

@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Cairo, Tajawal } from 'next/font/google'
+import { IBM_Plex_Sans_Arabic } from 'next/font/google'
 import { CompareBar } from '@/components/compare-bar'
 import { ThemeProvider } from '@/components/theme-provider'
 import { LanguageProvider } from '@/lib/i18n/language-provider'
@@ -9,16 +9,16 @@ import { LOCALE_COOKIE } from '@/lib/i18n/language-provider'
 import type { Locale } from '@/lib/i18n/dictionary'
 import './globals.css'
 
-const cairo = Cairo({
+// One type family for the whole product — Arabic and Latin glyphs come
+// from the same design (IBM Plex), so headings, body copy, phone names,
+// and prices share one typographic voice instead of two unrelated
+// typefaces stitched together. Reads as engineered/technical, which fits
+// a specs-and-data product; 400/500 cover body and UI, 600/700 cover
+// headings and emphasis.
+const plexArabic = IBM_Plex_Sans_Arabic({
   subsets: ['arabic', 'latin'],
-  variable: '--font-cairo',
-  display: 'swap',
-})
-
-const tajawal = Tajawal({
-  subsets: ['arabic', 'latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-tajawal',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-plex-arabic',
   display: 'swap',
 })
 
@@ -112,7 +112,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       dir={dir}
-      className={`${cairo.variable} ${tajawal.variable}`}
+      className={plexArabic.variable}
       suppressHydrationWarning
     >
       <body className="bg-background font-sans text-foreground antialiased">

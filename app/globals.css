@@ -5,8 +5,14 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: var(--font-inter), var(--font-tajawal), 'Inter', 'Tajawal', ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-inter), var(--font-cairo), 'Inter', 'Cairo', ui-sans-serif, system-ui, sans-serif;
+  /* Single loaded family (IBM Plex Sans Arabic, via next/font in
+     layout.tsx) covers both scripts, so --font-sans and --font-display
+     both point to it — the two tokens stay separate as hooks in case a
+     genuine display typeface is ever introduced later, but today they
+     render identically and differ only by weight/size at the usage
+     site. */
+  --font-sans: var(--font-plex-arabic), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-plex-arabic), ui-sans-serif, system-ui, sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -139,8 +145,14 @@
   h4 {
     font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: -0.01em;
-    line-height: 1.15;
+    /* No negative tracking: this is an Arabic-first product (IBM Plex
+       Sans Arabic). Tightening letter-spacing helps Latin display type
+       but does nothing useful for Arabic script and can visually crowd
+       joined letterforms — so headings use the font's natural spacing
+       instead of the "tracking-tight" habit borrowed from Latin-only
+       design systems. */
+    letter-spacing: 0;
+    line-height: 1.25;
     text-wrap: balance;
   }
 
@@ -242,6 +254,11 @@
   animation-delay: -3s;
 }
 
+.animate-float-slow {
+  animation: abdou-float 7s ease-in-out infinite;
+  animation-delay: -1.5s;
+}
+
 /* Very slow rotation for the multi-hue glow ring behind the hero product
    shot — reads as a soft ambient shimmer, not a spinner. */
 @keyframes abdou-spin-slow {
@@ -257,25 +274,6 @@
   animation: abdou-spin-slow 20s linear infinite;
 }
 
-/* Breathing glow for primary CTAs / emphasis surfaces. */
-@keyframes abdou-pulse-glow {
-  0%,
-  100% {
-    box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--primary) 25%, transparent),
-      0 12px 32px -10px color-mix(in srgb, var(--primary) 55%, transparent);
-  }
-  50% {
-    box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--primary) 35%, transparent),
-      0 20px 48px -8px color-mix(in srgb, var(--primary) 70%, transparent);
-  }
-}
-
-.animate-pulse-glow {
-  animation: abdou-pulse-glow 3.2s ease-in-out infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up {
     animation: none;
@@ -285,8 +283,8 @@
 
   .animate-float,
   .animate-float-delayed,
-  .animate-spin-slow,
-  .animate-pulse-glow {
+  .animate-float-slow,
+  .animate-spin-slow {
     animation: none;
   }
 }

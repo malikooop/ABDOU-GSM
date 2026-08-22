@@ -188,15 +188,15 @@ export const dictionaries: Record<Locale, Dictionary> = {
       back: 'رجوع',
     },
     hero: {
-      badge: 'منصة اكتشاف الهواتف الأولى في الجزائر',
+      badge: 'منصة جزائرية مستقلة لمقارنة الهواتف',
       title: 'هاتفك القادم يبدأ من هنا',
       description:
-        'اكتشف، فلتر، وقارن الهواتف الذكية واختر الأنسب لك بناءً على بيانات حقيقية و ABDOU SCORE — تقييم شامل يجمع الأداء والكاميرا والبطارية والقيمة مقابل السعر.',
+        'قارن الهواتف الذكية واختر الأنسب لك حسب ميزانيتك، بالاعتماد على ABDOU SCORE — تقييم يجمع الأداء والكاميرا والبطارية والقيمة مقابل السعر.',
         description2:
-  'ابحث بين مئات الهواتف، وقارن المواصفات بالتفصيل، واعرف أفضل قيمة مقابل السعر قبل اتخاذ قرار الشراء.',
+  'ابحث بين مئات الهواتف وقارن مواصفاتها بالتفصيل قبل اتخاذ قرار الشراء.',
 
 description3:
-  'يتم تحديث الأسعار والمواصفات باستمرار لتمنحك تجربة بحث احترافية شبيهة بأفضل مواقع الهواتف العالمية.',
+  'أسعار ومواصفات محدثة باستمرار.',
       exploreCta: 'استكشف الهواتف',
       aiCta: 'جرب ABDOU AI',
       featureSupported: 'هاتف مدعوم',
@@ -273,11 +273,11 @@ description3:
     },
     editorialPicks: {
       title: 'اختيارات عبدو',
-      subtitle: 'توصيات مختارة بعناية لكل احتياج',
+      subtitle: 'توصيات حسب أكثر الاستخدامات شيوعاً',
       detailsCta: 'التفاصيل',
     },
     siteFooter: {
-      description: 'منصة ABDOU GSM لاكتشاف الهواتف الذكية في الجزائر — قرارات أذكى ببيانات حقيقية.',
+      description: 'ABDOU GSM — قارن الهواتف الذكية في الجزائر بأسعار ومواصفات محدثة.',
       rights: 'جميع الحقوق محفوظة.',
     },
     mobileNav: {
@@ -376,15 +376,15 @@ description3:
       back: 'Back',
     },
     hero: {
-      badge: "Algeria's #1 phone discovery platform",
+      badge: "Algeria's independent phone comparison platform",
       title: 'Your next phone starts here',
       description:
-        'Discover, filter, and compare smartphones and pick the right one for you based on real data and ABDOU SCORE — a comprehensive rating combining performance, camera, battery, and value for money.',
+        'Compare smartphones and pick the right one for your budget, based on ABDOU SCORE — a rating that combines performance, camera, battery, and value for money.',
         description2:
-  'Search hundreds of smartphones, compare detailed specifications, and discover the best value before buying.',
+  'Search hundreds of phones and compare their specs in detail before you buy.',
 
 description3:
-  'Prices and specifications are continuously updated to deliver a professional experience similar to the worlds leading smartphone platforms.',
+  'Prices and specs, kept up to date.',
       exploreCta: 'Explore Phones',
       aiCta: 'Try ABDOU AI',
       featureSupported: 'phones supported',
@@ -453,11 +453,11 @@ description3:
     },
     editorialPicks: {
       title: "Abdou's Picks",
-      subtitle: 'Carefully selected recommendations for every need',
+      subtitle: 'Recommendations for common use cases',
       detailsCta: 'Details',
     },
     siteFooter: {
-      description: 'ABDOU GSM — discover smartphones in Algeria, smarter decisions with real data.',
+      description: 'ABDOU GSM — compare smartphones in Algeria with up-to-date prices and specs.',
       rights: 'All rights reserved.',
     },
     mobileNav: {
