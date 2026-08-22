@@ -42,7 +42,8 @@ export function HeroSection({ phones }: { phones: Phone[] }) {
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="text-center lg:text-start"
         >
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/60 px-3 py-1 text-sm font-semibold text-muted-foreground shadow-elevation-sm backdrop-blur-sm">
+            <span className="size-1.5 shrink-0 rounded-full bg-accent shadow-[0_0_8px_var(--accent)]" aria-hidden="true" />
             {dict.hero.badge}
           </span>
 
@@ -80,7 +81,7 @@ export function HeroSection({ phones }: { phones: Phone[] }) {
           <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
             <Link
               href="/phones"
-              className="gradient-primary inline-flex h-12 items-center gap-2 rounded-full px-7 text-sm font-semibold text-white shadow-elevation-md transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
+              className="gradient-primary animate-pulse-glow inline-flex h-12 items-center gap-2 rounded-full px-7 text-sm font-semibold text-white transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
             >
               <Smartphone className="size-4" aria-hidden="true" />
               {dict.hero.exploreCta}
@@ -120,23 +121,24 @@ export function HeroSection({ phones }: { phones: Phone[] }) {
           >
             <div className="relative">
               <div className="relative mx-auto h-[400px] w-full max-w-[22rem] lg:h-[500px]">
-                <div className="absolute left-1/2 top-1/2 -z-10 h-[110%] w-[110%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/20" />
-                <div className="absolute left-1/2 top-1/2 -z-10 h-[85%] w-[85%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/25 blur-[100px]" />
+                <div className="absolute left-1/2 top-1/2 -z-10 h-[110%] w-[110%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/20 dark:border-white/10" />
+                <div className="animate-spin-slow absolute left-1/2 top-1/2 -z-10 h-[85%] w-[85%] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40 glow-ring dark:opacity-60" />
+                <div className="absolute left-1/2 top-1/2 -z-10 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/25 blur-[90px]" />
 
                 <PhoneImage phone={primary} priority className="transition-transform duration-500 hover:-translate-y-1" />
 
-                <div className="glass-panel absolute -start-4 top-14 hidden rounded-2xl px-5 py-4 shadow-elevation-md lg:block">
+                <div className="glass-panel animate-float absolute -start-4 top-14 hidden rounded-2xl px-5 py-4 shadow-elevation-md lg:block">
                   <p className="text-xs uppercase tracking-wider text-muted-foreground">RAM</p>
                   <p className="mt-1 text-lg font-bold text-foreground">{primary.specs?.ram ?? '—'}</p>
                 </div>
 
-                <div className="glass-panel absolute -end-4 bottom-14 hidden rounded-2xl px-5 py-4 shadow-elevation-md lg:block">
+                <div className="glass-panel animate-float-delayed absolute -end-4 bottom-14 hidden rounded-2xl px-5 py-4 shadow-elevation-md lg:block">
                   <p className="text-xs uppercase tracking-wider text-muted-foreground">STORAGE</p>
                   <p className="mt-1 text-lg font-bold text-foreground">{primary.specs?.storage ?? '—'}</p>
                 </div>
               </div>
 
-              <div className="glass-panel absolute end-0 top-2 rounded-2xl px-5 py-4 shadow-elevation-md">
+              <div className="glass-panel animate-float absolute end-0 top-2 rounded-2xl px-5 py-4 shadow-elevation-md">
                 <div className="flex items-center gap-2">
                   <AbdouScore score={primary.score} size="sm" />
                   <div>

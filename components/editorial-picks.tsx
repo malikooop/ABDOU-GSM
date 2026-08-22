@@ -20,7 +20,7 @@ export function EditorialPicks({ phones }: { phones: Phone[] }) {
   return (
     <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
       <div className="mb-8 flex items-center gap-3">
-        <span className="grid size-10 place-items-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
+        <span className="grid size-10 place-items-center rounded-xl bg-warning/10 text-warning">
           <Award className="size-5" aria-hidden="true" />
         </span>
         <div>
@@ -37,13 +37,13 @@ export function EditorialPicks({ phones }: { phones: Phone[] }) {
           return (
             <article
               key={pick.id}
-              className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-elevation-md"
+              className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-elevation-md"
             >
               <div className="relative h-44 bg-secondary/40">
                 <div className="absolute end-3 top-3 z-10">
                   <AbdouScore score={phone.score} size="sm" />
                 </div>
-                <div className="absolute start-3 top-3 z-10 inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-3 py-1 text-xs font-bold text-white shadow-elevation-sm">
+                <div className="absolute start-3 top-3 z-10 inline-flex items-center gap-1.5 rounded-full bg-success px-3 py-1 text-xs font-bold text-white shadow-elevation-sm">
                   <Award className="size-3.5" aria-hidden="true" />
                   {pick.tag}
                 </div>

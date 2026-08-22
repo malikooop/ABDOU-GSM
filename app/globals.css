@@ -50,68 +50,79 @@
   --card-foreground: #0F172A;
   --popover: #FFFFFF;
   --popover-foreground: #0F172A;
-  --primary: #5B5FEF;
-  --primary-hover: #4F46E5;
+  --primary: #4C6FEF;
+  --primary-hover: #3B58D8;
   --primary-foreground: #FFFFFF;
   --secondary: #F3F5FA;
   --secondary-foreground: #0F172A;
   --muted: #F3F5FA;
   --muted-foreground: #64748B;
-  --accent: #7C6CF8;
+  --accent: #9333EA;
   --accent-foreground: #FFFFFF;
   --destructive: #EF4444;
-  --success: #22C55E;
+  --success: #16A87E;
   --warning: #F59E0B;
   --border: #E8EBF3;
   --input: #E8EBF3;
-  --ring: #5B5FEF;
-  --chart-1: #5B5FEF;
-  --chart-2: #7C6CF8;
-  --chart-3: #22C55E;
+  --ring: #4C6FEF;
+  --chart-1: #4C6FEF;
+  --chart-2: #9333EA;
+  --chart-3: #16A87E;
   --chart-4: #F59E0B;
   --chart-5: #64748B;
+  --gradient-primary: linear-gradient(135deg, #4C6FEF 0%, #9333EA 100%);
 }
 
 /* Dark = the primary, default experience (layout.tsx already sets
    defaultTheme="dark"). Deep near-black navy, solid cards for everyday
    UI, and glass/neon reserved for hero-level "showcase" moments only —
    matching how the reference image itself uses it (grid cards below the
-   hero are plain solid cards, not glass). */
+   hero are plain solid cards, not glass). Palette tuned to the ABDOU
+   PHONE reference: electric blue → violet → magenta, on a near-black
+   base. */
 .dark {
   color-scheme: dark;
-  --background: #07080F;
-  --foreground: #F4F5FA;
-  --card: #12131F;
-  --card-foreground: #F4F5FA;
-  --popover: #14152388;
-  --popover-foreground: #F4F5FA;
-  --primary: #5B6CFF;
-  --primary-hover: #4453F0;
+  --background: #06070D;
+  --foreground: #F5F6FC;
+  --card: #101223;
+  --card-foreground: #F5F6FC;
+  --popover: #12142688;
+  --popover-foreground: #F5F6FC;
+  --primary: #4C7DFF;
+  --primary-hover: #3B66E6;
   --primary-foreground: #FFFFFF;
-  --secondary: #161827;
-  --secondary-foreground: #F4F5FA;
-  --muted: #161827;
-  --muted-foreground: #94A3B8;
+  --secondary: #141628;
+  --secondary-foreground: #F5F6FC;
+  --muted: #141628;
+  --muted-foreground: #97A0C3;
   --accent: #A855F7;
   --accent-foreground: #FFFFFF;
   --destructive: #F87171;
-  --success: #34D399;
+  --success: #2DD4A8;
   --warning: #FBBF24;
   --border: rgba(255, 255, 255, 0.08);
   --input: rgba(255, 255, 255, 0.12);
-  --ring: #5B6CFF;
-  --chart-1: #5B6CFF;
+  --ring: #4C7DFF;
+  --chart-1: #4C7DFF;
   --chart-2: #A855F7;
-  --chart-3: #34D399;
+  --chart-3: #2DD4A8;
   --chart-4: #FBBF24;
-  --chart-5: #94A3B8;
+  --chart-5: #97A0C3;
 
   /* Extra tokens, dark-mode only — power the hero-level glass/neon
      moments (floating spec chips, score card, the glow ring behind the
      phone). Not consumed by ordinary cards. */
-  --glass-bg: rgba(255, 255, 255, 0.045);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --gradient-primary: linear-gradient(135deg, #5B6CFF 0%, #A855F7 100%);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --gradient-primary: linear-gradient(135deg, #4C7DFF 0%, #A855F7 100%);
+  --glow-magenta: #EC4899;
+  --gradient-glow: conic-gradient(
+    from 180deg at 50% 50%,
+    #4C7DFF 0%,
+    #A855F7 38%,
+    #EC4899 62%,
+    #4C7DFF 100%
+  );
 }
 
 @layer base {
@@ -177,6 +188,14 @@
       0 20px 60px -12px color-mix(in srgb, var(--primary) 45%, transparent);
   }
 
+  /* Soft multi-hue backdrop (blue → violet → magenta), blurred into a
+     halo. Used behind the hero product shot, echoing the reference
+     image's glowing ring — decorative only, sits behind real content. */
+  .glow-ring {
+    background: var(--gradient-glow, var(--gradient-primary, var(--primary)));
+    filter: blur(90px);
+  }
+
   .bg-grid {
     background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
     background-size: 24px 24px;
@@ -202,10 +221,72 @@
   animation: abdou-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* Gentle vertical drift for hero-level floating chips (RAM/Storage/Score
+   panels) — makes the showcase feel alive without being distracting. */
+@keyframes abdou-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float {
+  animation: abdou-float 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: abdou-float 6s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+/* Very slow rotation for the multi-hue glow ring behind the hero product
+   shot — reads as a soft ambient shimmer, not a spinner. */
+@keyframes abdou-spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: abdou-spin-slow 20s linear infinite;
+}
+
+/* Breathing glow for primary CTAs / emphasis surfaces. */
+@keyframes abdou-pulse-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--primary) 25%, transparent),
+      0 12px 32px -10px color-mix(in srgb, var(--primary) 55%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--primary) 35%, transparent),
+      0 20px 48px -8px color-mix(in srgb, var(--primary) 70%, transparent);
+  }
+}
+
+.animate-pulse-glow {
+  animation: abdou-pulse-glow 3.2s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up {
     animation: none;
     opacity: 1;
     transform: none;
+  }
+
+  .animate-float,
+  .animate-float-delayed,
+  .animate-spin-slow,
+  .animate-pulse-glow {
+    animation: none;
   }
 }

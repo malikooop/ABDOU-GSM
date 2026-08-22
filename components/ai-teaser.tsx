@@ -132,7 +132,7 @@ export function AiTeaser({ phones }: { phones: Phone[] }) {
                 type="button"
                 onClick={handleRecommend}
                 disabled={state.status === 'loading'}
-                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-7 text-sm font-semibold text-primary-foreground transition-transform duration-200 hover:scale-[1.01] active:scale-[0.98] disabled:opacity-50 sm:w-auto"
+                className="gradient-primary glow-primary inline-flex h-12 w-full items-center justify-center gap-2 rounded-full px-7 text-sm font-semibold text-white transition-transform duration-200 hover:scale-[1.01] active:scale-[0.98] disabled:opacity-50 sm:w-auto"
               >
                 {state.status === 'loading' && (
                   <Loader2 className="size-4 animate-spin" aria-hidden="true" />
