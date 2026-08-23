@@ -89,102 +89,102 @@ export default function Dashboard() {
   }, [phones, search]);
 
   return (
-    <div className="p-8">
-      <div className="mb-8 flex items-center justify-between">
+    <div>
+      <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-black">لوحة الإدارة</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="font-display text-2xl font-bold text-foreground">لوحة الإدارة</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             {loading ? "جارٍ التحميل..." : `${filteredPhones.length} هاتف`}
           </p>
         </div>
         <LogoutButton />
       </div>
 
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center">
         <input
           type="text"
           placeholder="بحث بالماركة، الموديل أو الفئة..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-lg border border-gray-300 bg-white p-3 text-black focus:border-blue-500 focus:outline-none"
+          className="w-full rounded-lg border border-input bg-card px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
         />
         <button
           onClick={loadPhones}
           disabled={loading}
-          className="shrink-0 rounded-lg border bg-white px-4 py-3 text-sm font-semibold text-gray-700 shadow-sm hover:shadow disabled:opacity-50"
+          className="shrink-0 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground shadow-elevation-sm transition-colors duration-200 hover:bg-secondary disabled:opacity-50"
         >
-          🔄 تحديث
+          تحديث
         </button>
       </div>
 
       {error && (
-        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
+        <div className="mb-5 rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
           {error}
         </div>
       )}
 
       {loading ? (
-        <p className="text-gray-500">جارٍ تحميل الهواتف...</p>
+        <p className="text-sm text-muted-foreground">جارٍ تحميل الهواتف...</p>
       ) : filteredPhones.length === 0 ? (
-        <div className="rounded-xl border bg-white p-10 text-center text-gray-400">
+        <div className="rounded-2xl border border-border bg-card p-10 text-center text-sm text-muted-foreground">
           {phones.length === 0
             ? "لا توجد هواتف مضافة بعد."
             : "لا توجد نتائج مطابقة لبحثك."}
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border bg-white shadow-sm">
+        <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow-elevation-sm">
           <table className="w-full min-w-[900px]">
-            <thead className="bg-gray-100">
+            <thead className="bg-secondary/50">
               <tr>
-                <th className="p-3 text-right text-black">الصورة</th>
-                <th className="p-3 text-right text-black">الهاتف</th>
-                <th className="p-3 text-right text-black">الفئة</th>
-                <th className="p-3 text-right text-black">السعر</th>
-                <th className="p-3 text-right text-black">ABDOU</th>
-                <th className="p-3 text-center text-black">5G</th>
-                <th className="p-3 text-right text-black">التوفر</th>
-                <th className="p-3 text-right text-black">الإجراءات</th>
+                <th className="p-3 text-right text-xs font-semibold text-muted-foreground">الصورة</th>
+                <th className="p-3 text-right text-xs font-semibold text-muted-foreground">الهاتف</th>
+                <th className="p-3 text-right text-xs font-semibold text-muted-foreground">الفئة</th>
+                <th className="p-3 text-right text-xs font-semibold text-muted-foreground">السعر</th>
+                <th className="p-3 text-right text-xs font-semibold text-muted-foreground">ABDOU</th>
+                <th className="p-3 text-center text-xs font-semibold text-muted-foreground">5G</th>
+                <th className="p-3 text-right text-xs font-semibold text-muted-foreground">التوفر</th>
+                <th className="p-3 text-right text-xs font-semibold text-muted-foreground">الإجراءات</th>
               </tr>
             </thead>
 
-            <tbody className="text-black">
+            <tbody>
               {filteredPhones.map((phone) => (
-                <tr key={phone.id} className="border-t hover:bg-gray-50">
+                <tr key={phone.id} className="border-t border-border transition-colors duration-150 hover:bg-secondary/40">
                   <td className="p-3">
                     <img
-                      src={phone.image_url || "/placeholder.png"}
-                      className="h-20 w-20 rounded-lg border object-cover"
+                      src={phone.image_url || "/placeholder.svg"}
+                      className="h-16 w-16 rounded-lg border border-border object-cover"
                       alt={`${phone.brand} ${phone.model}`}
                     />
                   </td>
 
                   <td className="p-3">
-                    <div className="font-bold">{phone.brand}</div>
-                    <div className="text-gray-600">{phone.model}</div>
+                    <div className="font-semibold text-foreground">{phone.brand}</div>
+                    <div className="text-sm text-muted-foreground">{phone.model}</div>
                   </td>
 
-                  <td className="p-3">{phone.category || "—"}</td>
+                  <td className="p-3 text-sm text-foreground">{phone.category || "—"}</td>
 
-                  <td className="p-3">
+                  <td className="p-3 text-sm text-foreground">
                     {phone.price_new != null
                       ? `${phone.price_new.toLocaleString()} دج`
                       : "—"}
                   </td>
 
-                  <td className="p-3 font-bold text-blue-600">
+                  <td className="p-3 text-sm font-bold text-primary">
                     {phone.abdou_score ?? "—"}
                   </td>
 
-                  <td className="p-3 text-center">
-                    {phone.has_5g ? "✅" : "❌"}
+                  <td className="p-3 text-center text-sm">
+                    {phone.has_5g ? "✅" : "—"}
                   </td>
 
                   <td className="p-3">
                     <span
-                      className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                      className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
                         phone.availability === "Available"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
+                          ? "bg-success/10 text-success"
+                          : "bg-destructive/10 text-destructive"
                       }`}
                     >
                       {phone.availability || "—"}
@@ -195,7 +195,7 @@ export default function Dashboard() {
                     <div className="flex gap-2">
                       <Link
                         href={`/admin/phones/${phone.id}`}
-                        className="rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700"
+                        className="rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary-hover"
                       >
                         تعديل
                       </Link>
@@ -203,7 +203,7 @@ export default function Dashboard() {
                       <button
                         onClick={() => deletePhone(phone.id)}
                         disabled={deletingId === phone.id}
-                        className="rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700 disabled:opacity-50"
+                        className="rounded-lg bg-destructive px-3 py-1.5 text-xs font-semibold text-white transition-colors duration-200 hover:bg-destructive/90 disabled:opacity-50"
                       >
                         {deletingId === phone.id ? "..." : "حذف"}
                       </button>
