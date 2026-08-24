@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { IBM_Plex_Sans_Arabic } from 'next/font/google'
+import { Cairo } from 'next/font/google'
 import { CompareBar } from '@/components/compare-bar'
 import { ThemeProvider } from '@/components/theme-provider'
 import { LanguageProvider } from '@/lib/i18n/language-provider'
@@ -10,15 +10,16 @@ import type { Locale } from '@/lib/i18n/dictionary'
 import './globals.css'
 
 // One type family for the whole product — Arabic and Latin glyphs come
-// from the same design (IBM Plex), so headings, body copy, phone names,
-// and prices share one typographic voice instead of two unrelated
-// typefaces stitched together. Reads as engineered/technical, which fits
-// a specs-and-data product; 400/500 cover body and UI, 600/700 cover
-// headings and emphasis.
-const plexArabic = IBM_Plex_Sans_Arabic({
+// from the same design (Cairo), so headings, body copy, phone names, and
+// prices share one typographic voice instead of two unrelated typefaces
+// stitched together. Cairo reads more contemporary/geometric than IBM
+// Plex for Arabic UI at small sizes (nav, labels, prices) while still
+// pairing cleanly with Latin brand names and numerals; 400/500/600/700/800
+// cover body through display-weight headings.
+const cairo = Cairo({
   subsets: ['arabic', 'latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-plex-arabic',
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-cairo',
   display: 'swap',
 })
 
@@ -112,7 +113,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       dir={dir}
-      className={plexArabic.variable}
+      className={cairo.variable}
       suppressHydrationWarning
     >
       <body className="bg-background font-sans text-foreground antialiased">

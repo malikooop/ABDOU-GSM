@@ -1,0 +1,294 @@
+diff --git a/app/admin/phones/[id]/page.tsx b/app/admin/phones/[id]/page.tsx
+index dc8d4f5..cfae4c7 100644
+--- a/app/admin/phones/[id]/page.tsx
++++ b/app/admin/phones/[id]/page.tsx
+@@ -351,8 +351,8 @@ export default function EditPhonePage() {
+         <section className="space-y-5">
+           <h2 className="text-sm font-semibold text-foreground">الأسعار</h2>
+           <div className="grid grid-cols-2 gap-6">
+-            <div><label className={labelClass}>السعر الجديد</label><input type="number" lang="en" min="0" value={priceNew} onChange={(e) => setPriceNew(e.target.value)} className={inputClass} /></div>
+-            <div><label className={labelClass}>السعر المستعمل</label><input type="number" lang="en" min="0" value={priceUsed} onChange={(e) => setPriceUsed(e.target.value)} className={inputClass} /></div>
++            <div><label className={labelClass}>السعر الجديد</label><input type="number" lang="en" autoComplete="off" min="0" value={priceNew} onChange={(e) => setPriceNew(e.target.value)} className={inputClass} /></div>
++            <div><label className={labelClass}>السعر المستعمل</label><input type="number" lang="en" autoComplete="off" min="0" value={priceUsed} onChange={(e) => setPriceUsed(e.target.value)} className={inputClass} /></div>
+           </div>
+         </section>
+ 
+@@ -376,7 +376,7 @@ export default function EditPhonePage() {
+             <div><label className={labelClass}>نظام التشغيل</label><input value={os} onChange={(e) => setOs(e.target.value)} className={inputClass} /></div>
+             <div>
+               <label className={labelClass}>سنة الإصدار</label>
+-              <input type="number" lang="en" min="2000" max="2100" value={releaseDate} onChange={(e) => setReleaseDate(e.target.value)} className={inputClass} />
++              <input type="number" lang="en" autoComplete="off" min="2000" max="2100" value={releaseDate} onChange={(e) => setReleaseDate(e.target.value)} className={inputClass} />
+             </div>
+           </div>
+         </section>
+diff --git a/app/admin/phones/new/page.tsx b/app/admin/phones/new/page.tsx
+index 69dabc6..5b76a5a 100644
+--- a/app/admin/phones/new/page.tsx
++++ b/app/admin/phones/new/page.tsx
+@@ -211,8 +211,8 @@ export default function NewPhonePage() {
+         <section className="space-y-5">
+           <h2 className="text-sm font-semibold text-foreground">السعر</h2>
+           <div className="grid grid-cols-2 gap-6">
+-            <div><label className={labelClass}>السعر الجديد</label><input type="number" lang="en" min="0" value={priceNew} onChange={(e) => setPriceNew(e.target.value)} className={inputClass} /></div>
+-            <div><label className={labelClass}>سعر المستعمل</label><input type="number" lang="en" min="0" value={priceUsed} onChange={(e) => setPriceUsed(e.target.value)} className={inputClass} /></div>
++            <div><label className={labelClass}>السعر الجديد</label><input type="number" lang="en" autoComplete="off" min="0" value={priceNew} onChange={(e) => setPriceNew(e.target.value)} className={inputClass} /></div>
++            <div><label className={labelClass}>سعر المستعمل</label><input type="number" lang="en" autoComplete="off" min="0" value={priceUsed} onChange={(e) => setPriceUsed(e.target.value)} className={inputClass} /></div>
+           </div>
+         </section>
+ 
+@@ -236,7 +236,7 @@ export default function NewPhonePage() {
+             <div><label className={labelClass}>نظام التشغيل</label><input value={os} onChange={(e) => setOs(e.target.value)} className={inputClass} /></div>
+             <div>
+               <label className={labelClass}>سنة الإصدار</label>
+-              <input type="number" lang="en" min="2000" max="2100" placeholder="2026" value={releaseDate} onChange={(e) => setReleaseDate(e.target.value)} className={inputClass} />
++              <input type="number" lang="en" autoComplete="off" min="2000" max="2100" placeholder="2026" value={releaseDate} onChange={(e) => setReleaseDate(e.target.value)} className={inputClass} />
+             </div>
+           </div>
+         </section>
+@@ -271,7 +271,7 @@ export default function NewPhonePage() {
+             ].map(([label, value, setter]: any) => (
+               <div key={label}>
+                 <label className={labelClass}>{label}</label>
+-                <input type="number" lang="en" step="0.1" min="0" max="10" value={value} onChange={(e) => setter(e.target.value)} className={inputClass} />
++                <input type="number" lang="en" autoComplete="off" step="0.1" min="0" max="10" value={value} onChange={(e) => setter(e.target.value)} className={inputClass} />
+               </div>
+             ))}
+           </div>
+@@ -280,7 +280,7 @@ export default function NewPhonePage() {
+           <div><label className={labelClass}>نقاط الضعف</label><textarea rows={3} value={weaknesses} onChange={(e) => setWeaknesses(e.target.value)} className={inputClass} /></div>
+ 
+           <div className="grid grid-cols-2 gap-6">
+-            <div><label className={labelClass}>تقييم ABDOU GSM</label><input type="number" lang="en" step="0.1" min="0" max="10" value={abdouScore} onChange={(e) => setAbdouScore(e.target.value)} className={inputClass} /></div>
++            <div><label className={labelClass}>تقييم ABDOU GSM</label><input type="number" lang="en" autoComplete="off" step="0.1" min="0" max="10" value={abdouScore} onChange={(e) => setAbdouScore(e.target.value)} className={inputClass} /></div>
+             <div><label className={labelClass}>التوفر</label><input value={availability} onChange={(e) => setAvailability(e.target.value)} placeholder="Available" className={inputClass} /></div>
+           </div>
+ 
+diff --git a/app/globals.css b/app/globals.css
+index 29bbf1a..e507dde 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -11,8 +11,8 @@
+      genuine display typeface is ever introduced later, but today they
+      render identically and differ only by weight/size at the usage
+      site. */
+-  --font-sans: var(--font-plex-arabic), ui-sans-serif, system-ui, sans-serif;
+-  --font-display: var(--font-plex-arabic), ui-sans-serif, system-ui, sans-serif;
++  --font-sans: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
++  --font-display: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
+ 
+   --color-background: var(--background);
+   --color-foreground: var(--foreground);
+diff --git a/app/layout.tsx b/app/layout.tsx
+index 8819278..099a4d3 100644
+--- a/app/layout.tsx
++++ b/app/layout.tsx
+@@ -1,7 +1,7 @@
+ import { cookies } from 'next/headers'
+ import { Analytics } from '@vercel/analytics/next'
+ import type { Metadata, Viewport } from 'next'
+-import { IBM_Plex_Sans_Arabic } from 'next/font/google'
++import { Cairo } from 'next/font/google'
+ import { CompareBar } from '@/components/compare-bar'
+ import { ThemeProvider } from '@/components/theme-provider'
+ import { LanguageProvider } from '@/lib/i18n/language-provider'
+@@ -10,15 +10,16 @@ import type { Locale } from '@/lib/i18n/dictionary'
+ import './globals.css'
+ 
+ // One type family for the whole product — Arabic and Latin glyphs come
+-// from the same design (IBM Plex), so headings, body copy, phone names,
+-// and prices share one typographic voice instead of two unrelated
+-// typefaces stitched together. Reads as engineered/technical, which fits
+-// a specs-and-data product; 400/500 cover body and UI, 600/700 cover
+-// headings and emphasis.
+-const plexArabic = IBM_Plex_Sans_Arabic({
++// from the same design (Cairo), so headings, body copy, phone names, and
++// prices share one typographic voice instead of two unrelated typefaces
++// stitched together. Cairo reads more contemporary/geometric than IBM
++// Plex for Arabic UI at small sizes (nav, labels, prices) while still
++// pairing cleanly with Latin brand names and numerals; 400/500/600/700/800
++// cover body through display-weight headings.
++const cairo = Cairo({
+   subsets: ['arabic', 'latin'],
+-  weight: ['400', '500', '600', '700'],
+-  variable: '--font-plex-arabic',
++  weight: ['400', '500', '600', '700', '800'],
++  variable: '--font-cairo',
+   display: 'swap',
+ })
+ 
+@@ -112,7 +113,7 @@ export default async function RootLayout({
+     <html
+       lang={locale}
+       dir={dir}
+-      className={plexArabic.variable}
++      className={cairo.variable}
+       suppressHydrationWarning
+     >
+       <body className="bg-background font-sans text-foreground antialiased">
+diff --git a/app/phones/page.tsx b/app/phones/page.tsx
+index c259f65..20c553d 100644
+--- a/app/phones/page.tsx
++++ b/app/phones/page.tsx
+@@ -18,11 +18,11 @@ export const metadata: Metadata = {
+ // causes a visible jump the instant data arrives.
+ function PhonesPageSkeleton() {
+   return (
+-    <div className="grid animate-pulse gap-10 lg:grid-cols-[260px_1fr] lg:gap-10">
+-      <div className="h-[420px] rounded-2xl border border-border bg-card shadow-elevation-sm" />
+-      <div>
+-        <div className="mb-8 h-4 w-32 rounded bg-muted" />
+-        <div className="grid grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3">
++    <div className="flex animate-pulse flex-col gap-8 lg:flex-row lg:items-start lg:gap-8">
++      <div className="h-[420px] rounded-2xl border border-border bg-card shadow-elevation-sm lg:w-[260px] lg:shrink-0" />
++      <div className="min-w-0 flex-1">
++        <div className="mb-6 h-4 w-32 rounded bg-muted" />
++        <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3">
+           {Array.from({ length: 6 }).map((_, i) => (
+             <div key={i} className="space-y-3">
+               <div className="h-64 rounded-2xl border border-border bg-card" />
+diff --git a/components/ai-teaser.tsx b/components/ai-teaser.tsx
+index a2f12f1..00a59a5 100644
+--- a/components/ai-teaser.tsx
++++ b/components/ai-teaser.tsx
+@@ -96,6 +96,7 @@ export function AiTeaser({ phones }: { phones: Phone[] }) {
+                   type="number"
+                   lang="en"
+                   inputMode="numeric"
++                  autoComplete="off"
+                   min={0}
+                   step={5000}
+                   value={budget}
+diff --git a/components/hero-section.tsx b/components/hero-section.tsx
+index ca53814..1efd5e9 100644
+--- a/components/hero-section.tsx
++++ b/components/hero-section.tsx
+@@ -1,8 +1,8 @@
+ 'use client'
+ 
+ import Link from 'next/link'
+-import { motion } from 'framer-motion'
+-import { ArrowUpRight, RefreshCcw, ShieldCheck, Smartphone, Star } from 'lucide-react'
++import { motion, useReducedMotion } from 'framer-motion'
++import { ArrowUpRight, Battery, Cpu, Camera, RefreshCcw, ShieldCheck, Smartphone, Star } from 'lucide-react'
+ import { AbdouScore } from '@/components/abdou-score'
+ import { PhoneImage } from '@/components/phone-image'
+ import { formatDZD } from '@/lib/format'
+@@ -10,6 +10,51 @@ import { cn } from '@/lib/utils'
+ import { useLanguage } from '@/lib/i18n/language-provider'
+ import type { Phone } from '@/lib/types'
+ 
++// One icon badge, positioned at the edge of a rotating parent ring. The
++// parent (passed via `angle` + shared `duration`) carries the orbit
++// motion; this badge counter-rotates at the exact same speed so the icon
++// itself always reads upright, never spinning in place like the ring it
++// rides on.
++function OrbitIcon({
++  Icon,
++  angle,
++  duration,
++}: {
++  Icon: typeof Cpu
++  angle: number
++  duration: number
++}) {
++  const reduceMotion = useReducedMotion()
++  if (reduceMotion) {
++    return (
++      <div
++        className="absolute left-1/2 top-1/2 -z-10 h-[95%] w-[95%] -translate-x-1/2 -translate-y-1/2"
++        style={{ transform: `translate(-50%, -50%) rotate(${angle}deg)` }}
++      >
++        <div className="glass-panel absolute left-1/2 top-0 grid size-8 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full text-primary shadow-elevation-sm">
++          <Icon className="size-4" aria-hidden="true" style={{ transform: `rotate(${-angle}deg)` }} />
++        </div>
++      </div>
++    )
++  }
++  return (
++    <motion.div
++      className="absolute left-1/2 top-1/2 -z-10 h-[95%] w-[95%] -translate-x-1/2 -translate-y-1/2"
++      style={{ rotate: angle }}
++      animate={{ rotate: angle + 360 }}
++      transition={{ duration, repeat: Infinity, ease: 'linear' }}
++    >
++      <motion.div
++        className="glass-panel absolute left-1/2 top-0 grid size-8 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full text-primary shadow-elevation-sm"
++        animate={{ rotate: -360 }}
++        transition={{ duration, repeat: Infinity, ease: 'linear' }}
++      >
++        <Icon className="size-4" aria-hidden="true" />
++      </motion.div>
++    </motion.div>
++  )
++}
++
+ export function HeroSection({ phones }: { phones: Phone[] }) {
+   const { dict } = useLanguage()
+   const [primary, ...rest] = phones
+@@ -144,6 +189,17 @@ export function HeroSection({ phones }: { phones: Phone[] }) {
+                   <span className="absolute left-1/2 top-0 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_10px_3px_var(--accent)]" />
+                 </div>
+ 
++                {/* Spec-icon satellites — the signature "impressive" touch:
++                    three real icons (chip, battery, camera) orbit the
++                    device on their own ring, each counter-rotating so it
++                    always reads upright rather than tumbling. Hidden below
++                    lg to keep the mobile hero calm and uncluttered. */}
++                <div className="hidden lg:contents">
++                  <OrbitIcon Icon={Cpu} angle={0} duration={22} />
++                  <OrbitIcon Icon={Battery} angle={120} duration={22} />
++                  <OrbitIcon Icon={Camera} angle={240} duration={22} />
++                </div>
++
+                 <PhoneImage phone={primary} priority className="transition-transform duration-500 hover:-translate-y-1" />
+ 
+                 <div className="glass-panel animate-float absolute -start-4 top-14 hidden rounded-2xl px-5 py-4 shadow-elevation-md lg:block">
+diff --git a/components/phones-catalog-client.tsx b/components/phones-catalog-client.tsx
+index c39cf51..0ec4023 100644
+--- a/components/phones-catalog-client.tsx
++++ b/components/phones-catalog-client.tsx
+@@ -143,8 +143,8 @@ export function PhonesCatalogClient() {
+     (has5G ? 1 : 0)
+ 
+   return (
+-    <div className="grid gap-8 lg:grid-cols-[260px_1fr] lg:gap-8">
+-      <aside className="lg:sticky lg:top-24 lg:h-fit">
++    <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-8">
++      <aside className="lg:sticky lg:top-24 lg:w-[260px] lg:shrink-0">
+         <div className="rounded-2xl border border-border bg-card p-5 shadow-elevation-sm">
+           <div className="mb-6 flex items-center justify-between">
+             <h2 className="font-display text-sm font-semibold text-foreground">
+@@ -230,6 +230,7 @@ export function PhonesCatalogClient() {
+                 type="number"
+                 lang="en"
+                 inputMode="numeric"
++                autoComplete="off"
+                 min={0}
+                 step={5000}
+                 value={maxPrice}
+@@ -242,11 +243,11 @@ export function PhonesCatalogClient() {
+             <div className="grid grid-cols-2 gap-4">
+               <div>
+                 <label className={labelClass} htmlFor="filter-min-ram">{dict.phonesPage.minRamLabel}</label>
+-                <input id="filter-min-ram" type="number" lang="en" inputMode="numeric" min={0} value={minRam} onChange={(e) => setMinRam(e.target.value)} placeholder="8" className={fieldClass} />
++                <input id="filter-min-ram" type="number" lang="en" inputMode="numeric" autoComplete="off" min={0} value={minRam} onChange={(e) => setMinRam(e.target.value)} placeholder="8" className={fieldClass} />
+               </div>
+               <div>
+                 <label className={labelClass} htmlFor="filter-min-storage">{dict.phonesPage.minStorageLabel}</label>
+-                <input id="filter-min-storage" type="number" lang="en" inputMode="numeric" min={0} value={minStorage} onChange={(e) => setMinStorage(e.target.value)} placeholder="128" className={fieldClass} />
++                <input id="filter-min-storage" type="number" lang="en" inputMode="numeric" autoComplete="off" min={0} value={minStorage} onChange={(e) => setMinStorage(e.target.value)} placeholder="128" className={fieldClass} />
+               </div>
+             </div>
+ 
+@@ -267,8 +268,8 @@ export function PhonesCatalogClient() {
+         </div>
+       </aside>
+ 
+-      <div>
+-        <div className="mb-8 flex items-center justify-between">
++      <div className="min-w-0 flex-1">
++        <div className="mb-6 flex items-center justify-between">
+           <p className="text-sm text-muted-foreground" aria-live="polite">
+             {loading ? dict.phonesPage.loadingResults : `${phones.length} ${dict.phonesPage.resultsLabel}`}
+           </p>

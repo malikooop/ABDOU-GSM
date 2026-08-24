@@ -1,14 +1,59 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { ArrowUpRight, RefreshCcw, ShieldCheck, Smartphone, Star } from 'lucide-react'
+import { motion, useReducedMotion } from 'framer-motion'
+import { ArrowUpRight, Battery, Cpu, Camera, RefreshCcw, ShieldCheck, Smartphone, Star } from 'lucide-react'
 import { AbdouScore } from '@/components/abdou-score'
 import { PhoneImage } from '@/components/phone-image'
 import { formatDZD } from '@/lib/format'
 import { cn } from '@/lib/utils'
 import { useLanguage } from '@/lib/i18n/language-provider'
 import type { Phone } from '@/lib/types'
+
+// One icon badge, positioned at the edge of a rotating parent ring. The
+// parent (passed via `angle` + shared `duration`) carries the orbit
+// motion; this badge counter-rotates at the exact same speed so the icon
+// itself always reads upright, never spinning in place like the ring it
+// rides on.
+function OrbitIcon({
+  Icon,
+  angle,
+  duration,
+}: {
+  Icon: typeof Cpu
+  angle: number
+  duration: number
+}) {
+  const reduceMotion = useReducedMotion()
+  if (reduceMotion) {
+    return (
+      <div
+        className="absolute left-1/2 top-1/2 -z-10 h-[95%] w-[95%] -translate-x-1/2 -translate-y-1/2"
+        style={{ transform: `translate(-50%, -50%) rotate(${angle}deg)` }}
+      >
+        <div className="glass-panel absolute left-1/2 top-0 grid size-8 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full text-primary shadow-elevation-sm">
+          <Icon className="size-4" aria-hidden="true" style={{ transform: `rotate(${-angle}deg)` }} />
+        </div>
+      </div>
+    )
+  }
+  return (
+    <motion.div
+      className="absolute left-1/2 top-1/2 -z-10 h-[95%] w-[95%] -translate-x-1/2 -translate-y-1/2"
+      style={{ rotate: angle }}
+      animate={{ rotate: angle + 360 }}
+      transition={{ duration, repeat: Infinity, ease: 'linear' }}
+    >
+      <motion.div
+        className="glass-panel absolute left-1/2 top-0 grid size-8 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full text-primary shadow-elevation-sm"
+        animate={{ rotate: -360 }}
+        transition={{ duration, repeat: Infinity, ease: 'linear' }}
+      >
+        <Icon className="size-4" aria-hidden="true" />
+      </motion.div>
+    </motion.div>
+  )
+}
 
 export function HeroSection({ phones }: { phones: Phone[] }) {
   const { dict } = useLanguage()
@@ -142,6 +187,17 @@ export function HeroSection({ phones }: { phones: Phone[] }) {
                 </div>
                 <div className="orbit-satellite-reverse absolute left-1/2 top-1/2 -z-10 h-[110%] w-[110%] -translate-x-1/2 -translate-y-1/2">
                   <span className="absolute left-1/2 top-0 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_10px_3px_var(--accent)]" />
+                </div>
+
+                {/* Spec-icon satellites — the signature "impressive" touch:
+                    three real icons (chip, battery, camera) orbit the
+                    device on their own ring, each counter-rotating so it
+                    always reads upright rather than tumbling. Hidden below
+                    lg to keep the mobile hero calm and uncluttered. */}
+                <div className="hidden lg:contents">
+                  <OrbitIcon Icon={Cpu} angle={0} duration={22} />
+                  <OrbitIcon Icon={Battery} angle={120} duration={22} />
+                  <OrbitIcon Icon={Camera} angle={240} duration={22} />
                 </div>
 
                 <PhoneImage phone={primary} priority className="transition-transform duration-500 hover:-translate-y-1" />

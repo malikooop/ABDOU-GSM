@@ -18,11 +18,11 @@ export const metadata: Metadata = {
 // causes a visible jump the instant data arrives.
 function PhonesPageSkeleton() {
   return (
-    <div className="grid animate-pulse gap-10 lg:grid-cols-[260px_1fr] lg:gap-10">
-      <div className="h-[420px] rounded-2xl border border-border bg-card shadow-elevation-sm" />
-      <div>
-        <div className="mb-8 h-4 w-32 rounded bg-muted" />
-        <div className="grid grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3">
+    <div className="flex animate-pulse flex-col gap-8 lg:flex-row lg:items-start lg:gap-8">
+      <div className="h-[420px] rounded-2xl border border-border bg-card shadow-elevation-sm lg:w-[260px] lg:shrink-0" />
+      <div className="min-w-0 flex-1">
+        <div className="mb-6 h-4 w-32 rounded bg-muted" />
+        <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="space-y-3">
               <div className="h-64 rounded-2xl border border-border bg-card" />

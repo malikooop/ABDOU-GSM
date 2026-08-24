@@ -96,6 +96,7 @@ export function AiTeaser({ phones }: { phones: Phone[] }) {
                   type="number"
                   lang="en"
                   inputMode="numeric"
+                  autoComplete="off"
                   min={0}
                   step={5000}
                   value={budget}

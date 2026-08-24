@@ -143,8 +143,8 @@ export function PhonesCatalogClient() {
     (has5G ? 1 : 0)
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[260px_1fr] lg:gap-8">
-      <aside className="lg:sticky lg:top-24 lg:h-fit">
+    <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-8">
+      <aside className="lg:sticky lg:top-24 lg:w-[260px] lg:shrink-0">
         <div className="rounded-2xl border border-border bg-card p-5 shadow-elevation-sm">
           <div className="mb-6 flex items-center justify-between">
             <h2 className="font-display text-sm font-semibold text-foreground">
@@ -230,6 +230,7 @@ export function PhonesCatalogClient() {
                 type="number"
                 lang="en"
                 inputMode="numeric"
+                autoComplete="off"
                 min={0}
                 step={5000}
                 value={maxPrice}
@@ -242,11 +243,11 @@ export function PhonesCatalogClient() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className={labelClass} htmlFor="filter-min-ram">{dict.phonesPage.minRamLabel}</label>
-                <input id="filter-min-ram" type="number" lang="en" inputMode="numeric" min={0} value={minRam} onChange={(e) => setMinRam(e.target.value)} placeholder="8" className={fieldClass} />
+                <input id="filter-min-ram" type="number" lang="en" inputMode="numeric" autoComplete="off" min={0} value={minRam} onChange={(e) => setMinRam(e.target.value)} placeholder="8" className={fieldClass} />
               </div>
               <div>
                 <label className={labelClass} htmlFor="filter-min-storage">{dict.phonesPage.minStorageLabel}</label>
-                <input id="filter-min-storage" type="number" lang="en" inputMode="numeric" min={0} value={minStorage} onChange={(e) => setMinStorage(e.target.value)} placeholder="128" className={fieldClass} />
+                <input id="filter-min-storage" type="number" lang="en" inputMode="numeric" autoComplete="off" min={0} value={minStorage} onChange={(e) => setMinStorage(e.target.value)} placeholder="128" className={fieldClass} />
               </div>
             </div>
 
@@ -267,8 +268,8 @@ export function PhonesCatalogClient() {
         </div>
       </aside>
 
-      <div>
-        <div className="mb-8 flex items-center justify-between">
+      <div className="min-w-0 flex-1">
+        <div className="mb-6 flex items-center justify-between">
           <p className="text-sm text-muted-foreground" aria-live="polite">
             {loading ? dict.phonesPage.loadingResults : `${phones.length} ${dict.phonesPage.resultsLabel}`}
           </p>
