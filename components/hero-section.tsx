@@ -31,7 +31,7 @@ export function HeroSection({ phones }: { phones: Phone[] }) {
 
       <div
         className={cn(
-          'mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 md:py-24 lg:gap-10',
+          'mx-auto grid max-w-7xl items-center gap-8 px-4 py-12 sm:px-6 md:py-16',
           primary ? 'lg:grid-cols-[1.05fr_1fr]' : 'lg:grid-cols-1',
         )}
       >
@@ -61,7 +61,7 @@ export function HeroSection({ phones }: { phones: Phone[] }) {
               first two are counted from the live catalog, the third
               describes a real, working feature (the AI compare button
               below), not a fabricated number. */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-8 lg:justify-start">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-6 lg:justify-start">
             <div>
               <p className="text-3xl font-bold text-primary">{phones.length}+</p>
               <p className="text-sm text-muted-foreground">{dict.hero.statsPhones}</p>
@@ -78,7 +78,7 @@ export function HeroSection({ phones }: { phones: Phone[] }) {
             </div>
           </div>
 
-          <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
+          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
             <Link
               href="/phones"
               className="gradient-primary glow-primary inline-flex h-12 items-center gap-2 rounded-full px-7 text-sm font-semibold text-white transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_20px_45px_-12px_color-mix(in_srgb,var(--primary)_55%,transparent)] active:scale-[0.98]"
@@ -96,7 +96,7 @@ export function HeroSection({ phones }: { phones: Phone[] }) {
             </Link>
           </div>
 
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-2 lg:justify-start">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2 lg:justify-start">
             {features.map((f) => (
               <div
                 key={f.text}
@@ -140,7 +140,7 @@ export function HeroSection({ phones }: { phones: Phone[] }) {
 
               <div className="glass-panel animate-float-slow absolute end-0 top-2 rounded-2xl px-5 py-4 shadow-elevation-md">
                 <div className="flex items-center gap-2">
-                  <AbdouScore score={primary.score} size="sm" />
+                  <AbdouScore score={primary.score} size="sm" glow />
                   <div>
                     <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
                       ABDOU SCORE
@@ -152,13 +152,13 @@ export function HeroSection({ phones }: { phones: Phone[] }) {
                 </div>
               </div>
 
-              <p className="mt-8 text-center font-display text-2xl font-bold text-primary lg:text-start">
+              <p className="mt-6 text-center font-display text-2xl font-bold text-primary lg:text-start">
                 {formatDZD(primary.price)}
               </p>
             </div>
 
             {secondary.length > 0 && (
-              <div className="mt-12 grid grid-cols-2 gap-4">
+              <div className="mt-8 grid grid-cols-2 gap-4">
                 {secondary.map((phone) => {
                   const specLine = [phone.specs?.ram, phone.specs?.storage].filter(Boolean).join(' • ')
                   return (

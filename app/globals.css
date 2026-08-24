@@ -274,6 +274,22 @@
   animation: abdou-spin-slow 20s linear infinite;
 }
 
+/* Registering --score-pct as a typed property (not just a plain CSS
+   variable) is what makes it animatable — the browser can only transition
+   between two percentages if it knows the value is a <percentage> and not
+   an opaque string. Powers the ABDOU SCORE ring filling in smoothly on
+   mount instead of snapping straight to its final value (see
+   components/abdou-score.tsx). */
+@property --score-pct {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+.score-ring {
+  transition: --score-pct 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up {
     animation: none;
@@ -286,5 +302,9 @@
   .animate-float-slow,
   .animate-spin-slow {
     animation: none;
+  }
+
+  .score-ring {
+    transition: none;
   }
 }

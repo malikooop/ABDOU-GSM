@@ -4,7 +4,12 @@ import Link from 'next/link'
 import { AbdouLogo } from '@/components/abdou-logo'
 import { useLanguage } from '@/lib/i18n/language-provider'
 
-export function SiteFooter() {
+interface SiteFooterProps {
+  logoUrl?: string | null
+  siteName?: string
+}
+
+export function SiteFooter({ logoUrl, siteName }: SiteFooterProps = {}) {
   const { dict } = useLanguage()
 
   const links = [
@@ -15,11 +20,11 @@ export function SiteFooter() {
 
   return (
     <footer className="border-t border-border/60">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
         <div className="flex flex-col items-start justify-between gap-10 sm:flex-row sm:items-center">
           <div className="max-w-sm">
-            <Link href="/" aria-label="ABDOU GSM" className="inline-flex">
-              <AbdouLogo />
+            <Link href="/" aria-label={siteName ?? 'ABDOU GSM'} className="inline-flex">
+              <AbdouLogo logoUrl={logoUrl} siteName={siteName} />
             </Link>
             <p className="mt-4 text-pretty text-sm leading-relaxed text-muted-foreground">
               {dict.siteFooter.description}

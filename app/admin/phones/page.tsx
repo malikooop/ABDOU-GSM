@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { formatNumber } from "@/lib/format";
 import LogoutButton from "@/components/LogoutButton";
 import Link from "next/link";
 
@@ -148,7 +149,7 @@ export default function Dashboard() {
                   </td>
                   <td className="px-4 py-4 text-muted-foreground">{phone.category || "—"}</td>
                   <td className="px-4 py-4">
-                    {phone.price_new != null ? `${phone.price_new.toLocaleString()} دج` : "—"}
+                    {phone.price_new != null ? `${formatNumber(phone.price_new)} دج` : "—"}
                   </td>
                   <td className="px-4 py-4 font-semibold text-primary">{phone.abdou_score ?? "—"}</td>
                   <td className="px-4 py-4 text-center">{phone.has_5g ? "✓" : "—"}</td>

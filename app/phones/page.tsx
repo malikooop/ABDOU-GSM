@@ -5,6 +5,7 @@ import { SiteFooter } from '@/components/site-footer'
 import { MobileBottomNav } from '@/components/mobile-bottom-nav'
 import { PhonesCatalogClient } from '@/components/phones-catalog-client'
 import { PhonesPageHeader } from '@/components/phones-page-header'
+import { getSiteSettings } from '@/lib/settings'
 
 export const metadata: Metadata = {
   title: 'كل الهواتف — ABDOU GSM',
@@ -35,10 +36,12 @@ function PhonesPageSkeleton() {
   )
 }
 
-export default function PhonesPage() {
+export default async function PhonesPage() {
+  const settings = await getSiteSettings()
+
   return (
     <div className="min-h-dvh">
-      <SiteHeader />
+      <SiteHeader logoUrl={settings.logoUrl} siteName={settings.siteName} />
       <main className="pb-24 md:pb-12">
         <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
           <PhonesPageHeader />
@@ -48,7 +51,7 @@ export default function PhonesPage() {
           </Suspense>
         </div>
       </main>
-      <SiteFooter />
+      <SiteFooter logoUrl={settings.logoUrl} siteName={settings.siteName} />
       <MobileBottomNav />
     </div>
   )

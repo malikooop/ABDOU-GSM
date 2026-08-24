@@ -6,6 +6,7 @@ import { BackButton } from '@/components/back-button'
 import { PhoneDetailsView } from '@/components/phone-details-view'
 import { PhoneNotFound } from '@/components/phone-not-found'
 import { getPhone } from '@/lib/api'
+import { getSiteSettings } from '@/lib/settings'
 import { withDerivedAnalysis } from '@/lib/analyze'
 
 interface PhoneDetailsPageProps {
@@ -49,13 +50,14 @@ export default async function PhoneDetailsPage({ params }: PhoneDetailsPageProps
   const id = Number(idParam)
 
   const phone = Number.isFinite(id) ? await getPhone(id) : null
+  const settings = await getSiteSettings()
 
   if (!phone) {
     return (
       <div className="min-h-dvh">
-        <SiteHeader />
+        <SiteHeader logoUrl={settings.logoUrl} siteName={settings.siteName} />
         <PhoneNotFound />
-        <SiteFooter />
+        <SiteFooter logoUrl={settings.logoUrl} siteName={settings.siteName} />
         <MobileBottomNav />
       </div>
     )
@@ -65,7 +67,7 @@ export default async function PhoneDetailsPage({ params }: PhoneDetailsPageProps
 
   return (
     <div className="min-h-dvh">
-      <SiteHeader />
+      <SiteHeader logoUrl={settings.logoUrl} siteName={settings.siteName} />
       <main className="pb-24 md:pb-12">
         <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
           <BackButton fallbackHref="/phones" />
@@ -73,7 +75,7 @@ export default async function PhoneDetailsPage({ params }: PhoneDetailsPageProps
 
         <PhoneDetailsView phone={enriched} />
       </main>
-      <SiteFooter />
+      <SiteFooter logoUrl={settings.logoUrl} siteName={settings.siteName} />
       <MobileBottomNav />
     </div>
   )

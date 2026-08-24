@@ -11,7 +11,12 @@ import { LanguageToggle } from '@/components/language-toggle'
 import { useLanguage } from '@/lib/i18n/language-provider'
 import { cn } from '@/lib/utils'
 
-export function SiteHeader() {
+interface SiteHeaderProps {
+  logoUrl?: string | null
+  siteName?: string
+}
+
+export function SiteHeader({ logoUrl, siteName }: SiteHeaderProps = {}) {
   const { dict } = useLanguage()
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
@@ -63,8 +68,8 @@ export function SiteHeader() {
       )}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2" aria-label="ABDOU GSM">
-          <AbdouLogo />
+        <Link href="/" className="flex items-center gap-2" aria-label={siteName ?? 'ABDOU GSM'}>
+          <AbdouLogo logoUrl={logoUrl} siteName={siteName} />
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label={dict.nav.mainNav}>

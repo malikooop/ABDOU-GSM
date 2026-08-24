@@ -1,3 +1,6 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { formatScore } from '@/lib/format'
 
@@ -5,6 +8,11 @@ interface AbdouScoreProps {
   score: number
   size?: 'sm' | 'md' | 'lg'
   className?: string
+  /** Adds a soft halo in the score's tone color — reserved for a single
+   * prominent instance per page (e.g. the hero's featured phone), not
+   * every badge, so it reads as emphasis rather than becoming visual
+   * noise where scores repeat (compare page, phone details). */
+  glow?: boolean
 }
 
 const SIZE_CONFIG = {
@@ -25,7 +33,7 @@ function scoreTone(score: number): string {
 }
 
 /** Circular ABDOU SCORE badge (out of 10) with a subtle progress ring. */
-export function AbdouScore({ score, size = 'md', className }: AbdouScoreProps) {
+export function AbdouScore({ score, size = 'md', className, glow = false }: AbdouScoreProps) {
   // Data can come from a nullable DB column (e.g. Supabase `abdou_score`),
   // so a caller passing `null`/`undefined`/NaN through as `number` is a
   // realistic scenario, not just a type-checker edge case. Without this
@@ -36,18 +44,38 @@ export function AbdouScore({ score, size = 'md', className }: AbdouScoreProps) {
   const tone = scoreTone(safeScore)
   const { dimensions, ring, label } = SIZE_CONFIG[size]
 
+  // The ring fills in from 0 on mount instead of snapping straight to its
+  // final value — this badge is often the first thing a visitor's eye
+  // lands on (the hero phone's floating score card), so it's worth the
+  // small extra polish. Two-frame trick: paint at 0% first, then on the
+  // next frame update to the real value — the CSS transition on
+  // --score-pct (registered via @property in globals.css) animates
+  // between the two automatically.
+  const [animatedPct, setAnimatedPct] = useState(0)
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setAnimatedPct(pct))
+    return () => cancelAnimationFrame(frame)
+  }, [pct])
+
   return (
     <div
       className={cn(
-        'relative grid shrink-0 place-items-center rounded-full',
+        'score-ring relative grid shrink-0 place-items-center rounded-full',
         dimensions,
         className,
       )}
       role="img"
       aria-label={`ABDOU SCORE ${formatScore(safeScore)} من 10`}
-      style={{
-        background: `conic-gradient(${tone} ${pct}%, var(--secondary) ${pct}%)`,
-      }}
+      style={
+        {
+          '--score-pct': `${animatedPct}%`,
+          background: `conic-gradient(${tone} var(--score-pct), var(--secondary) var(--score-pct))`,
+          boxShadow: glow
+            ? `0 0 0 1px color-mix(in srgb, ${tone} 15%, transparent), 0 0 24px -4px color-mix(in srgb, ${tone} 55%, transparent)`
+            : `0 0 0 1px color-mix(in srgb, ${tone} 12%, transparent)`,
+        } as React.CSSProperties
+      }
     >
       {/* Ring thickness scales with badge size so it reads proportionally
           the same at every size instead of looking chunkier on "sm". */}

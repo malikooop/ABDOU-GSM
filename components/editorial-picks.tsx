@@ -18,7 +18,7 @@ export function EditorialPicks({ phones }: { phones: Phone[] }) {
   if (picks.length === 0) return null
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+    <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <div className="mb-8 flex items-center gap-3">
         <span className="grid size-10 place-items-center rounded-xl bg-warning/10 text-warning">
           <Award className="size-5" aria-hidden="true" />

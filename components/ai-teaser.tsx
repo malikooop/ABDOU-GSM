@@ -65,13 +65,13 @@ export function AiTeaser({ phones }: { phones: Phone[] }) {
   }
 
   return (
-    <section id="abdou-ai" className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+    <section id="abdou-ai" className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-60px' }}
         transition={{ duration: 0.3 }}
-        className="overflow-hidden rounded-3xl bg-foreground px-6 py-14 text-background sm:px-14 sm:py-20"
+        className="overflow-hidden rounded-3xl bg-foreground px-6 py-10 text-background sm:px-10 sm:py-14"
       >
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div>

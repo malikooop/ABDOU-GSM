@@ -5,16 +5,19 @@ import { SiteFooter } from '@/components/site-footer'
 import { MobileBottomNav } from '@/components/mobile-bottom-nav'
 import { BackButton } from '@/components/back-button'
 import { ComparePageClient } from '@/components/compare-page-client'
+import { getSiteSettings } from '@/lib/settings'
 
 export const metadata: Metadata = {
   title: 'مقارنة الهواتف — ABDOU GSM',
   description: 'قارن بين هاتفين أو أكثر جنباً إلى جنب حسب المواصفات والسعر و ABDOU SCORE.',
 }
 
-export default function ComparePage() {
+export default async function ComparePage() {
+  const settings = await getSiteSettings()
+
   return (
     <div className="min-h-dvh">
-      <SiteHeader />
+      <SiteHeader logoUrl={settings.logoUrl} siteName={settings.siteName} />
       <main className="pb-24 md:pb-12">
         <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
           <div className="mb-4">
@@ -34,7 +37,7 @@ export default function ComparePage() {
           </Suspense>
         </div>
       </main>
-      <SiteFooter />
+      <SiteFooter logoUrl={settings.logoUrl} siteName={settings.siteName} />
       <MobileBottomNav />
     </div>
   )

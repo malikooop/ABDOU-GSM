@@ -10,6 +10,7 @@ import { AiTeaser } from '@/components/ai-teaser'
 import { MobileBottomNav } from '@/components/mobile-bottom-nav'
 import { SiteFooter } from '@/components/site-footer'
 import { getPhones } from '@/lib/api'
+import { getSiteSettings } from '@/lib/settings'
 import type { Metadata } from 'next'
 
 const HERO_COUNT = 3
@@ -49,9 +50,11 @@ export default async function HomePage() {
   // where Hero left off, giving visitors more variety as they scroll.
   const featured = phones.slice(HERO_COUNT, HERO_COUNT + FEATURED_COUNT)
 
+  const settings = await getSiteSettings()
+
   return (
     <div className="min-h-dvh">
-      <SiteHeader />
+      <SiteHeader logoUrl={settings.logoUrl} siteName={settings.siteName} />
 
       <main className="pb-24 md:pb-0">
         <SearchHero phones={phones} />
@@ -64,7 +67,7 @@ export default async function HomePage() {
         <AiTeaser phones={phones} />
       </main>
 
-      <SiteFooter />
+      <SiteFooter logoUrl={settings.logoUrl} siteName={settings.siteName} />
       <MobileBottomNav />
     </div>
   )

@@ -11,7 +11,7 @@ export function FeaturedPhones({ phones }: { phones: Phone[] }) {
   const { dict } = useLanguage()
 
   return (
-    <section id="phones" className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+    <section id="phones" className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <div className="mb-8 flex items-end justify-between gap-4">
         <div className="flex items-center gap-3">
           <span className="grid size-10 place-items-center rounded-xl bg-primary/10 text-primary">
