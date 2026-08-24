@@ -143,7 +143,7 @@ export function PhonesCatalogClient() {
     (has5G ? 1 : 0)
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[260px_1fr] lg:gap-10">
+    <div className="grid gap-8 lg:grid-cols-[260px_1fr] lg:gap-8">
       <aside className="lg:sticky lg:top-24 lg:h-fit">
         <div className="rounded-2xl border border-border bg-card p-5 shadow-elevation-sm">
           <div className="mb-6 flex items-center justify-between">
@@ -228,6 +228,7 @@ export function PhonesCatalogClient() {
               <input
                 id="filter-max-price"
                 type="number"
+                lang="en"
                 inputMode="numeric"
                 min={0}
                 step={5000}
@@ -241,11 +242,11 @@ export function PhonesCatalogClient() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className={labelClass} htmlFor="filter-min-ram">{dict.phonesPage.minRamLabel}</label>
-                <input id="filter-min-ram" type="number" inputMode="numeric" min={0} value={minRam} onChange={(e) => setMinRam(e.target.value)} placeholder="8" className={fieldClass} />
+                <input id="filter-min-ram" type="number" lang="en" inputMode="numeric" min={0} value={minRam} onChange={(e) => setMinRam(e.target.value)} placeholder="8" className={fieldClass} />
               </div>
               <div>
                 <label className={labelClass} htmlFor="filter-min-storage">{dict.phonesPage.minStorageLabel}</label>
-                <input id="filter-min-storage" type="number" inputMode="numeric" min={0} value={minStorage} onChange={(e) => setMinStorage(e.target.value)} placeholder="128" className={fieldClass} />
+                <input id="filter-min-storage" type="number" lang="en" inputMode="numeric" min={0} value={minStorage} onChange={(e) => setMinStorage(e.target.value)} placeholder="128" className={fieldClass} />
               </div>
             </div>
 
@@ -280,22 +281,22 @@ export function PhonesCatalogClient() {
         </div>
 
         {loading ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
+          <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
             <Loader2 className="size-6 animate-spin text-primary" aria-hidden="true" />
             <p className="text-sm text-muted-foreground">{dict.phonesPage.loadingCatalog}</p>
           </div>
         ) : error ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
+          <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
             <AlertTriangle className="size-6 text-destructive" aria-hidden="true" />
             <p className="text-sm text-muted-foreground">{error}</p>
           </div>
         ) : phones.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
+          <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
             <SearchX className="size-6 text-muted-foreground" aria-hidden="true" />
             <p className="text-sm text-muted-foreground">{dict.phonesPage.emptyResults}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3">
             {phones.map((phone, i) => (
               <motion.div
                 key={phone.id}

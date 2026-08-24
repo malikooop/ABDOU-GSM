@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 import { Award, ArrowUpRight } from 'lucide-react'
 import { AbdouScore } from '@/components/abdou-score'
 import { PhoneImage } from '@/components/phone-image'
@@ -18,7 +19,7 @@ export function EditorialPicks({ phones }: { phones: Phone[] }) {
   if (picks.length === 0) return null
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <div className="mb-8 flex items-center gap-3">
         <span className="grid size-10 place-items-center rounded-xl bg-warning/10 text-warning">
           <Award className="size-5" aria-hidden="true" />
@@ -32,11 +33,15 @@ export function EditorialPicks({ phones }: { phones: Phone[] }) {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {picks.map((pick) => {
+        {picks.map((pick, i) => {
           const phone = pick.phone
           return (
-            <article
+            <motion.article
               key={pick.id}
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.3, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
               className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-elevation-md"
             >
               <div className="relative h-44 bg-secondary/40">
@@ -79,7 +84,7 @@ export function EditorialPicks({ phones }: { phones: Phone[] }) {
                   </Link>
                 </div>
               </div>
-            </article>
+            </motion.article>
           )
         })}
       </div>

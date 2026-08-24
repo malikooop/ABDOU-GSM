@@ -79,7 +79,7 @@ export function ComparePageClient() {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-border bg-card px-6 py-24 text-center shadow-elevation-sm"
+        className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-border bg-card px-6 py-16 text-center shadow-elevation-sm"
       >
         <span className="grid size-14 place-items-center rounded-2xl bg-primary/10 text-primary">
           <GitCompareArrows className="size-6" aria-hidden="true" />
@@ -105,7 +105,7 @@ export function ComparePageClient() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
+      <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
         <Loader2 className="size-6 animate-spin text-primary" aria-hidden="true" />
         <p className="text-sm text-muted-foreground">جارٍ تحميل بيانات المقارنة...</p>
       </div>
@@ -118,7 +118,7 @@ export function ComparePageClient() {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-destructive/30 bg-card py-24 text-center"
+        className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-destructive/30 bg-card py-16 text-center"
       >
         <AlertTriangle className="size-6 text-destructive" aria-hidden="true" />
         <p className="text-sm text-muted-foreground">{error}</p>
@@ -179,34 +179,34 @@ export function ComparePageClient() {
         </div>
 
         <div role="row" className="contents">
-          <div role="rowheader" className="flex items-center border-t border-border/60 py-4 text-sm font-medium text-muted-foreground">
+          <div role="rowheader" className="flex items-center border-t border-border/60 py-3 text-sm font-medium text-muted-foreground">
             ABDOU SCORE
           </div>
           {phones.map((phone) => (
-            <div key={phone.id} role="cell" className="flex items-center justify-center border-t border-border/60 py-4">
+            <div key={phone.id} role="cell" className="flex items-center justify-center border-t border-border/60 py-3">
               <AbdouScore score={phone.score} size="md" />
             </div>
           ))}
         </div>
 
         <div role="row" className="contents">
-          <div role="rowheader" className="flex items-center border-t border-border/60 py-4 text-sm font-medium text-muted-foreground">
+          <div role="rowheader" className="flex items-center border-t border-border/60 py-3 text-sm font-medium text-muted-foreground">
             السعر
           </div>
           {phones.map((phone) => (
-            <div key={phone.id} role="cell" className="flex items-center justify-center border-t border-border/60 py-4 font-display text-base font-bold text-primary">
+            <div key={phone.id} role="cell" className="flex items-center justify-center border-t border-border/60 py-3 font-display text-base font-bold text-primary">
               {formatDZD(phone.price)}
             </div>
           ))}
         </div>
 
         {SPEC_ROWS.map(({ key, label }) => (
-          <div key={key} role="row" className="contents">
-            <div role="rowheader" className="flex items-center border-t border-border/60 py-4 text-sm font-medium text-muted-foreground">
+          <div key={key} role="row" className="contents group/row">
+            <div role="rowheader" className="flex items-center border-t border-border/60 py-3 text-sm font-medium text-muted-foreground transition-colors duration-150 group-hover/row:text-foreground">
               {label}
             </div>
             {phones.map((phone) => (
-              <div key={phone.id} role="cell" className="flex items-center justify-center border-t border-border/60 py-4 text-center text-sm text-foreground">
+              <div key={phone.id} role="cell" className="flex items-center justify-center border-t border-border/60 py-3 text-center text-sm text-foreground transition-colors duration-150 group-hover/row:bg-secondary/30">
                 {phone.specs?.[key] ?? '—'}
               </div>
             ))}

@@ -290,6 +290,59 @@
   transition: --score-pct 1s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Hero product ring — a true ring (not a filled disc) built from a conic
+   gradient masked down to a thin band, so it reads as an orbit/track
+   around the phone rather than a glowing blob. Spins slowly opposite the
+   satellite dots for a subtle counter-motion effect. */
+.orbit-track {
+  background: var(--gradient-glow, var(--gradient-primary, var(--primary)));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  animation: abdou-spin-slow 14s linear infinite;
+}
+
+.orbit-track-reverse {
+  animation-direction: reverse;
+}
+
+/* A satellite dot travels the circumference by rotating its positioned
+   parent; the dot itself carries a counter-rotation (via the inner span)
+   so its own glow stays round instead of smearing with the orbit. */
+@keyframes abdou-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.orbit-satellite {
+  animation: abdou-orbit 14s linear infinite;
+}
+
+.orbit-satellite-reverse {
+  animation: abdou-orbit 18s linear infinite reverse;
+}
+
+/* Gentle breathing glow for the core halo behind the phone — pairs with
+   the orbit ring so the whole cluster feels powered-on, not static. */
+@keyframes abdou-pulse-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+}
+
+.animate-pulse-glow {
+  animation: abdou-pulse-glow 5s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up {
     animation: none;
@@ -300,7 +353,11 @@
   .animate-float,
   .animate-float-delayed,
   .animate-float-slow,
-  .animate-spin-slow {
+  .animate-spin-slow,
+  .orbit-track,
+  .orbit-satellite,
+  .orbit-satellite-reverse,
+  .animate-pulse-glow {
     animation: none;
   }
 

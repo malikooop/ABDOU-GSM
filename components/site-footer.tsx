@@ -20,7 +20,7 @@ export function SiteFooter({ logoUrl, siteName }: SiteFooterProps = {}) {
 
   return (
     <footer className="border-t border-border/60">
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <div className="flex flex-col items-start justify-between gap-10 sm:flex-row sm:items-center">
           <div className="max-w-sm">
             <Link href="/" aria-label={siteName ?? 'ABDOU GSM'} className="inline-flex">

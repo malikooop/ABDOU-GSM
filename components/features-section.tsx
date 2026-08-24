@@ -18,7 +18,7 @@ export function FeaturesSection() {
   const items = dict.featuresSection.items
 
   return (
-    <section className="py-10">
+    <section className="py-8">
       <div className="mx-auto grid max-w-7xl gap-6 px-4 sm:grid-cols-2 xl:grid-cols-4">
         {items.map((item, i) => {
           const Icon = ICONS[i] ?? Trophy

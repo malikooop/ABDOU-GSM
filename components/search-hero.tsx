@@ -55,7 +55,7 @@ export function SearchHero({ phones }: { phones: Phone[] }) {
     // to "make room" for it — it already floats over the content below.
     // A normal pb-10 keeps this section's rhythm consistent with the rest
     // of the homepage (StatsSection etc. use the same py-10 scale).
-    <section className="relative pb-10">
+    <section className="relative pb-8">
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 flex justify-center">
         <div className="h-56 w-56 rounded-full bg-primary/10 blur-[120px]" />
       </div>

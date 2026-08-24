@@ -351,8 +351,8 @@ export default function EditPhonePage() {
         <section className="space-y-5">
           <h2 className="text-sm font-semibold text-foreground">الأسعار</h2>
           <div className="grid grid-cols-2 gap-6">
-            <div><label className={labelClass}>السعر الجديد</label><input type="number" min="0" value={priceNew} onChange={(e) => setPriceNew(e.target.value)} className={inputClass} /></div>
-            <div><label className={labelClass}>السعر المستعمل</label><input type="number" min="0" value={priceUsed} onChange={(e) => setPriceUsed(e.target.value)} className={inputClass} /></div>
+            <div><label className={labelClass}>السعر الجديد</label><input type="number" lang="en" min="0" value={priceNew} onChange={(e) => setPriceNew(e.target.value)} className={inputClass} /></div>
+            <div><label className={labelClass}>السعر المستعمل</label><input type="number" lang="en" min="0" value={priceUsed} onChange={(e) => setPriceUsed(e.target.value)} className={inputClass} /></div>
           </div>
         </section>
 
@@ -376,7 +376,7 @@ export default function EditPhonePage() {
             <div><label className={labelClass}>نظام التشغيل</label><input value={os} onChange={(e) => setOs(e.target.value)} className={inputClass} /></div>
             <div>
               <label className={labelClass}>سنة الإصدار</label>
-              <input type="number" min="2000" max="2100" value={releaseDate} onChange={(e) => setReleaseDate(e.target.value)} className={inputClass} />
+              <input type="number" lang="en" min="2000" max="2100" value={releaseDate} onChange={(e) => setReleaseDate(e.target.value)} className={inputClass} />
             </div>
           </div>
         </section>

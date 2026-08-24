@@ -65,7 +65,7 @@ export function AiTeaser({ phones }: { phones: Phone[] }) {
   }
 
   return (
-    <section id="abdou-ai" className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <section id="abdou-ai" className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -94,6 +94,7 @@ export function AiTeaser({ phones }: { phones: Phone[] }) {
                 <input
                   id="ai-budget"
                   type="number"
+                  lang="en"
                   inputMode="numeric"
                   min={0}
                   step={5000}

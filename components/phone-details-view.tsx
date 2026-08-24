@@ -34,7 +34,7 @@ export function PhoneDetailsView({ phone }: { phone: Phone }) {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-      className="mx-auto grid max-w-5xl gap-16 px-4 pb-16 sm:px-6 lg:grid-cols-2 lg:gap-20"
+      className="mx-auto grid max-w-5xl gap-10 px-4 pb-12 sm:px-6 lg:grid-cols-2 lg:gap-14"
     >
       {/* Visual + primary info — no bordered card, plain surfaces */}
       <div>
@@ -43,9 +43,14 @@ export function PhoneDetailsView({ phone }: { phone: Phone }) {
           <AbdouScore score={phone.score} size="lg" />
         </div>
 
-        <div className="relative my-8 h-64 rounded-3xl bg-secondary/30">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          className="relative my-6 h-64 rounded-3xl bg-secondary/30"
+        >
           <PhoneImage phone={phone} className="p-8" />
-        </div>
+        </motion.div>
 
         <div>
           <p className="text-sm text-muted-foreground">{phone.brand}</p>
@@ -68,7 +73,7 @@ export function PhoneDetailsView({ phone }: { phone: Phone }) {
         </div>
 
         {ratingEntries.length > 0 && (
-          <div className="mt-10 border-t border-border/60 pt-8">
+          <div className="mt-8 border-t border-border/60 pt-6">
             <h2 className="mb-5 font-display text-lg font-semibold text-foreground">
               {dict.phoneDetails.ratingBreakdown}
             </h2>
@@ -83,27 +88,34 @@ export function PhoneDetailsView({ phone }: { phone: Phone }) {
 
       {/* Specs + strengths/weaknesses — sections separated by plain
           dividers instead of stacked bordered cards */}
-      <div className="space-y-12">
+      <div className="space-y-8">
         <div>
           <h2 className="mb-5 font-display text-lg font-semibold text-foreground">
             {dict.phoneDetails.fullSpecs}
           </h2>
           <dl className="divide-y divide-border/60">
-            {SPEC_KEYS.map((key) => {
+            {SPEC_KEYS.map((key, i) => {
               const value = phone.specs?.[key]
               if (!value) return null
               return (
-                <div key={key} className="flex items-center justify-between gap-4 py-3 text-sm">
+                <motion.div
+                  key={key}
+                  initial={{ opacity: 0, x: 8 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.2, delay: i * 0.03 }}
+                  className="flex items-center justify-between gap-4 rounded-lg px-2 py-3 text-sm transition-colors duration-200 hover:bg-secondary/40"
+                >
                   <dt className="text-muted-foreground">{dict.phoneDetails.specLabels[key]}</dt>
                   <dd className="font-medium text-foreground">{value}</dd>
-                </div>
+                </motion.div>
               )
             })}
           </dl>
         </div>
 
         {phone.strengths && phone.strengths.length > 0 && (
-          <div className="border-t border-border/60 pt-8">
+          <div className="border-t border-border/60 pt-6">
             <h2 className="mb-4 font-display text-lg font-semibold text-foreground">
               {dict.phoneDetails.strengths}
             </h2>
@@ -121,7 +133,7 @@ export function PhoneDetailsView({ phone }: { phone: Phone }) {
         )}
 
         {phone.weaknesses && phone.weaknesses.length > 0 && (
-          <div className="border-t border-border/60 pt-8">
+          <div className="border-t border-border/60 pt-6">
             <h2 className="mb-4 font-display text-lg font-semibold text-foreground">
               {dict.phoneDetails.weaknesses}
             </h2>

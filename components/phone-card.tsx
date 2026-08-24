@@ -75,7 +75,7 @@ export function PhoneCard({ phone, className, style }: PhoneCardProps) {
         </div>
       </Link>
 
-      <div className="flex flex-1 flex-col p-5">
+      <div className="flex flex-1 flex-col p-4">
         <p className="text-sm text-muted-foreground">{phone.brand}</p>
 
         <Link href={`/phone/${phone.id}`} prefetch>
@@ -84,9 +84,9 @@ export function PhoneCard({ phone, className, style }: PhoneCardProps) {
           </h3>
         </Link>
 
-        {specLine && <p className="mt-3 text-sm text-muted-foreground">{specLine}</p>}
+        {specLine && <p className="mt-2 text-sm text-muted-foreground">{specLine}</p>}
 
-        <div className="mt-6 border-t border-border pt-5">
+        <div className="mt-5 border-t border-border pt-4">
           <div className="flex items-center justify-between">
             <span className="font-display text-3xl font-bold tracking-tight text-primary">
               {formatDZD(phone.price)}
@@ -96,7 +96,7 @@ export function PhoneCard({ phone, className, style }: PhoneCardProps) {
 
           <Link
             href={`/phone/${phone.id}`}
-            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-background py-3 text-sm font-semibold transition-all duration-200 hover:border-primary hover:bg-primary hover:text-primary-foreground"
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-background py-2.5 text-sm font-semibold transition-all duration-200 hover:border-primary hover:bg-primary hover:text-primary-foreground active:scale-[0.98]"
           >
             {dict.phoneCard.detailsCta}
             <ArrowUpRight className="size-4" />

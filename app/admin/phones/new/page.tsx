@@ -211,8 +211,8 @@ export default function NewPhonePage() {
         <section className="space-y-5">
           <h2 className="text-sm font-semibold text-foreground">السعر</h2>
           <div className="grid grid-cols-2 gap-6">
-            <div><label className={labelClass}>السعر الجديد</label><input type="number" min="0" value={priceNew} onChange={(e) => setPriceNew(e.target.value)} className={inputClass} /></div>
-            <div><label className={labelClass}>سعر المستعمل</label><input type="number" min="0" value={priceUsed} onChange={(e) => setPriceUsed(e.target.value)} className={inputClass} /></div>
+            <div><label className={labelClass}>السعر الجديد</label><input type="number" lang="en" min="0" value={priceNew} onChange={(e) => setPriceNew(e.target.value)} className={inputClass} /></div>
+            <div><label className={labelClass}>سعر المستعمل</label><input type="number" lang="en" min="0" value={priceUsed} onChange={(e) => setPriceUsed(e.target.value)} className={inputClass} /></div>
           </div>
         </section>
 
@@ -236,7 +236,7 @@ export default function NewPhonePage() {
             <div><label className={labelClass}>نظام التشغيل</label><input value={os} onChange={(e) => setOs(e.target.value)} className={inputClass} /></div>
             <div>
               <label className={labelClass}>سنة الإصدار</label>
-              <input type="number" min="2000" max="2100" placeholder="2026" value={releaseDate} onChange={(e) => setReleaseDate(e.target.value)} className={inputClass} />
+              <input type="number" lang="en" min="2000" max="2100" placeholder="2026" value={releaseDate} onChange={(e) => setReleaseDate(e.target.value)} className={inputClass} />
             </div>
           </div>
         </section>
@@ -271,7 +271,7 @@ export default function NewPhonePage() {
             ].map(([label, value, setter]: any) => (
               <div key={label}>
                 <label className={labelClass}>{label}</label>
-                <input type="number" step="0.1" min="0" max="10" value={value} onChange={(e) => setter(e.target.value)} className={inputClass} />
+                <input type="number" lang="en" step="0.1" min="0" max="10" value={value} onChange={(e) => setter(e.target.value)} className={inputClass} />
               </div>
             ))}
           </div>
@@ -280,7 +280,7 @@ export default function NewPhonePage() {
           <div><label className={labelClass}>نقاط الضعف</label><textarea rows={3} value={weaknesses} onChange={(e) => setWeaknesses(e.target.value)} className={inputClass} /></div>
 
           <div className="grid grid-cols-2 gap-6">
-            <div><label className={labelClass}>تقييم ABDOU GSM</label><input type="number" step="0.1" min="0" max="10" value={abdouScore} onChange={(e) => setAbdouScore(e.target.value)} className={inputClass} /></div>
+            <div><label className={labelClass}>تقييم ABDOU GSM</label><input type="number" lang="en" step="0.1" min="0" max="10" value={abdouScore} onChange={(e) => setAbdouScore(e.target.value)} className={inputClass} /></div>
             <div><label className={labelClass}>التوفر</label><input value={availability} onChange={(e) => setAvailability(e.target.value)} placeholder="Available" className={inputClass} /></div>
           </div>
 
