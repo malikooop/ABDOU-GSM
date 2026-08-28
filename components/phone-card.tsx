@@ -89,7 +89,7 @@ export function PhoneCard({ phone, className, style }: PhoneCardProps) {
         <div className="mt-5 border-t border-border pt-4">
           <div className="flex items-center justify-between">
             <span className="font-display text-3xl font-bold tracking-tight text-primary">
-              {formatDZD(phone.price)}
+              {formatDZD(phone.price, dict.common.currency)}
             </span>
             <CompareToggleButton phone={phone} />
           </div>

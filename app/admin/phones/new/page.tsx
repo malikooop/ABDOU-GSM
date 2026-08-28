@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { NumericField } from "@/components/numeric-field";
 import { supabase } from "@/lib/supabase";
 import type { FileObject } from "@supabase/storage-js";
 
@@ -211,8 +212,8 @@ export default function NewPhonePage() {
         <section className="space-y-5">
           <h2 className="text-sm font-semibold text-foreground">السعر</h2>
           <div className="grid grid-cols-2 gap-6">
-            <div><label className={labelClass}>السعر الجديد</label><input type="number" lang="en" autoComplete="off" min="0" value={priceNew} onChange={(e) => setPriceNew(e.target.value)} className={inputClass} /></div>
-            <div><label className={labelClass}>سعر المستعمل</label><input type="number" lang="en" autoComplete="off" min="0" value={priceUsed} onChange={(e) => setPriceUsed(e.target.value)} className={inputClass} /></div>
+            <div><label className={labelClass}>السعر الجديد</label><NumericField min={0} step={1000} value={priceNew} onChange={setPriceNew} className={inputClass} /></div>
+            <div><label className={labelClass}>سعر المستعمل</label><NumericField min={0} step={1000} value={priceUsed} onChange={setPriceUsed} className={inputClass} /></div>
           </div>
         </section>
 
@@ -236,7 +237,7 @@ export default function NewPhonePage() {
             <div><label className={labelClass}>نظام التشغيل</label><input value={os} onChange={(e) => setOs(e.target.value)} className={inputClass} /></div>
             <div>
               <label className={labelClass}>سنة الإصدار</label>
-              <input type="number" lang="en" autoComplete="off" min="2000" max="2100" placeholder="2026" value={releaseDate} onChange={(e) => setReleaseDate(e.target.value)} className={inputClass} />
+              <NumericField min={2000} max={2100} placeholder="2026" value={releaseDate} onChange={setReleaseDate} className={inputClass} />
             </div>
           </div>
         </section>
@@ -271,7 +272,7 @@ export default function NewPhonePage() {
             ].map(([label, value, setter]: any) => (
               <div key={label}>
                 <label className={labelClass}>{label}</label>
-                <input type="number" lang="en" autoComplete="off" step="0.1" min="0" max="10" value={value} onChange={(e) => setter(e.target.value)} className={inputClass} />
+                <NumericField decimal min={0} max={10} step={0.1} value={value} onChange={setter} className={inputClass} />
               </div>
             ))}
           </div>
@@ -280,7 +281,7 @@ export default function NewPhonePage() {
           <div><label className={labelClass}>نقاط الضعف</label><textarea rows={3} value={weaknesses} onChange={(e) => setWeaknesses(e.target.value)} className={inputClass} /></div>
 
           <div className="grid grid-cols-2 gap-6">
-            <div><label className={labelClass}>تقييم ABDOU GSM</label><input type="number" lang="en" autoComplete="off" step="0.1" min="0" max="10" value={abdouScore} onChange={(e) => setAbdouScore(e.target.value)} className={inputClass} /></div>
+            <div><label className={labelClass}>تقييم ABDOU GSM</label><NumericField decimal min={0} max={10} step={0.1} value={abdouScore} onChange={setAbdouScore} className={inputClass} /></div>
             <div><label className={labelClass}>التوفر</label><input value={availability} onChange={(e) => setAvailability(e.target.value)} placeholder="Available" className={inputClass} /></div>
           </div>
 

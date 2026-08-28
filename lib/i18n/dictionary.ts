@@ -28,6 +28,7 @@ export interface Dictionary {
     loading: string
     pickOneMore: string
     back: string
+    currency: string
   }
      
 
@@ -160,6 +161,18 @@ export interface Dictionary {
       releaseYear: string
     }
   }
+  comparePage: {
+    tableAriaLabel: string
+    priceLabel: string
+    notEnoughSelectedTitle: string
+    notEnoughSelectedDescription: string
+    browsePhones: string
+    loadingComparison: string
+    notEnoughDataError: string
+    loadFailedError: string
+    /** `{model}` is replaced with the phone's name. */
+    removeFromComparison: string
+  }
 }
 
 // NOTE: this is a starter set covering the strings from the files we've
@@ -186,6 +199,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       loading: 'جارٍ التحميل...',
       pickOneMore: 'اختر هاتفًا واحدًا آخر على الأقل',
       back: 'رجوع',
+      currency: 'دج',
     },
     hero: {
       badge: 'منصة جزائرية مستقلة لمقارنة الهواتف',
@@ -347,6 +361,18 @@ description3:
         releaseYear: 'سنة الإصدار',
       },
     },
+    comparePage: {
+      tableAriaLabel: 'مقارنة الهواتف',
+      priceLabel: 'السعر',
+      notEnoughSelectedTitle: 'يرجى اختيار هاتفين على الأقل للمقارنة',
+      notEnoughSelectedDescription:
+        'اذهب إلى قائمة الهواتف واضغط زر "مقارنة" على هاتفين أو أكثر، ثم اضغط "قارن الآن" لعرض المقارنة هنا.',
+      browsePhones: 'تصفح الهواتف',
+      loadingComparison: 'جارٍ تحميل بيانات المقارنة...',
+      notEnoughDataError: 'تعذر العثور على بيانات كافية لهذه الهواتف للمقارنة.',
+      loadFailedError: 'تعذر تحميل بيانات المقارنة حالياً. حاول مجدداً.',
+      removeFromComparison: 'إزالة {model} من المقارنة',
+    },
   },
   en: {
     nav: {
@@ -374,6 +400,7 @@ description3:
       loading: 'Loading...',
       pickOneMore: 'Pick at least one more phone',
       back: 'Back',
+      currency: 'DZD',
     },
     hero: {
       badge: "Algeria's independent phone comparison platform",
@@ -526,6 +553,18 @@ description3:
         os: 'OS',
         releaseYear: 'Release Year',
       },
+    },
+    comparePage: {
+      tableAriaLabel: 'Phone comparison',
+      priceLabel: 'Price',
+      notEnoughSelectedTitle: 'Please select at least two phones to compare',
+      notEnoughSelectedDescription:
+        'Go to the phones list and tap "Compare" on two or more phones, then tap "Compare Now" to see the comparison here.',
+      browsePhones: 'Browse Phones',
+      loadingComparison: 'Loading comparison data...',
+      notEnoughDataError: 'Could not find enough data for these phones to compare.',
+      loadFailedError: 'Could not load comparison data right now. Please try again.',
+      removeFromComparison: 'Remove {model} from comparison',
     },
   },
 }

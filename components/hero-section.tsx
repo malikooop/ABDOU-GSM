@@ -228,7 +228,7 @@ export function HeroSection({ phones }: { phones: Phone[] }) {
               </div>
 
               <p className="mt-5 text-center font-display text-2xl font-bold text-primary lg:text-start">
-                {formatDZD(primary.price)}
+                {formatDZD(primary.price, dict.common.currency)}
               </p>
             </div>
 

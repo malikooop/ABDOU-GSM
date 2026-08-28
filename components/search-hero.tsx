@@ -116,7 +116,7 @@ export function SearchHero({ phones }: { phones: Phone[] }) {
                             {Number.isFinite(phone.score) ? phone.score.toFixed(1) : '—'}
                           </span>
                           <span className="text-sm font-semibold text-primary">
-                            {formatDZD(phone.price)}
+                            {formatDZD(phone.price, dict.common.currency)}
                           </span>
                         </div>
                       </div>

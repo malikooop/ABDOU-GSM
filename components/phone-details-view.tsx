@@ -58,7 +58,7 @@ export function PhoneDetailsView({ phone }: { phone: Phone }) {
             {phone.model}
           </h1>
           <p className="mt-3 font-display text-2xl font-bold text-foreground">
-            {formatDZD(phone.price)}
+            {formatDZD(phone.price, dict.common.currency)}
           </p>
           {/* phone.highlight is always Arabic content regardless of UI
               language (product-content stays Arabic-only decision) —

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { AlertTriangle, Loader2, SearchX, X } from 'lucide-react'
 import { PhoneCard } from '@/components/phone-card'
+import { NumericField } from '@/components/numeric-field'
 import { CATEGORIES } from '@/lib/data'
 import { getPhones, type PhoneQuery, type SortOption } from '@/lib/api'
 import { useLanguage } from '@/lib/i18n/language-provider'
@@ -60,7 +61,6 @@ export function PhonesCatalogClient() {
     setMinRam(searchParams.get('min_ram') ?? '')
     setMinStorage(searchParams.get('min_storage') ?? '')
     setHas5G(searchParams.get('has_5g') === 'true')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])
 
   useEffect(() => {
@@ -225,16 +225,12 @@ export function PhonesCatalogClient() {
               <label className={labelClass} htmlFor="filter-max-price">
                 {dict.phonesPage.maxPriceLabel}
               </label>
-              <input
+              <NumericField
                 id="filter-max-price"
-                type="number"
-                lang="en"
-                inputMode="numeric"
-                autoComplete="off"
                 min={0}
                 step={5000}
                 value={maxPrice}
-                onChange={(e) => setMaxPrice(e.target.value)}
+                onChange={setMaxPrice}
                 placeholder={dict.phonesPage.maxPricePlaceholder}
                 className={fieldClass}
               />
@@ -243,11 +239,11 @@ export function PhonesCatalogClient() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className={labelClass} htmlFor="filter-min-ram">{dict.phonesPage.minRamLabel}</label>
-                <input id="filter-min-ram" type="number" lang="en" inputMode="numeric" autoComplete="off" min={0} value={minRam} onChange={(e) => setMinRam(e.target.value)} placeholder="8" className={fieldClass} />
+                <NumericField id="filter-min-ram" min={0} step={1} value={minRam} onChange={setMinRam} placeholder="8" className={fieldClass} />
               </div>
               <div>
                 <label className={labelClass} htmlFor="filter-min-storage">{dict.phonesPage.minStorageLabel}</label>
-                <input id="filter-min-storage" type="number" lang="en" inputMode="numeric" autoComplete="off" min={0} value={minStorage} onChange={(e) => setMinStorage(e.target.value)} placeholder="128" className={fieldClass} />
+                <NumericField id="filter-min-storage" min={0} step={32} value={minStorage} onChange={setMinStorage} placeholder="128" className={fieldClass} />
               </div>
             </div>
 

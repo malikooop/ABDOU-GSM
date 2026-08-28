@@ -73,7 +73,7 @@ export function EditorialPicks({ phones }: { phones: Phone[] }) {
 
                 <div className="mt-auto flex items-center justify-between border-t border-border/60 pt-3">
                   <span className="font-display text-base font-bold text-primary">
-                    {formatDZD(phone.price)}
+                    {formatDZD(phone.price, dict.common.currency)}
                   </span>
                   <Link
                     href={`/phone/${phone.id}`}

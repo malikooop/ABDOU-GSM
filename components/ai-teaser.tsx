@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { AnimatePresence, motion } from 'framer-motion'
 import { AlertTriangle, ArrowUpRight, Loader2, Sparkles } from 'lucide-react'
 import { AbdouScore } from '@/components/abdou-score'
+import { NumericField } from '@/components/numeric-field'
 import { formatDZD } from '@/lib/format'
 import { cn } from '@/lib/utils'
 import { getAdvice, mapUsageToAdviceType } from '@/lib/api'
@@ -91,18 +92,16 @@ export function AiTeaser({ phones }: { phones: Phone[] }) {
                 <label htmlFor="ai-budget" className="mb-2 block text-sm font-medium text-background/80">
                   {dict.aiTeaser.budgetLabel}
                 </label>
-                <input
+                <NumericField
                   id="ai-budget"
-                  type="number"
-                  lang="en"
-                  inputMode="numeric"
-                  autoComplete="off"
                   min={0}
                   step={5000}
                   value={budget}
-                  onChange={(e) => setBudget(e.target.value)}
+                  onChange={setBudget}
                   className="w-full rounded-lg border-0 bg-background/10 px-4 py-3 text-sm text-background outline-none ring-1 ring-background/15 transition-all duration-200 placeholder:text-background/40 focus:ring-2 focus:ring-primary"
+                  stepperClassName="text-background/50 hover:text-background"
                   placeholder={dict.aiTeaser.budgetPlaceholder}
+                  aria-label={dict.aiTeaser.budgetLabel}
                 />
               </div>
 
@@ -183,7 +182,7 @@ export function AiTeaser({ phones }: { phones: Phone[] }) {
                       <p className="text-xs text-background/60">{state.phone.brand}</p>
                       <p className="font-display text-lg font-bold">{state.phone.model}</p>
                       <p className="mt-0.5 font-display text-base font-bold text-primary">
-                        {formatDZD(state.phone.price)}
+                        {formatDZD(state.phone.price, dict.common.currency)}
                       </p>
                     </div>
                   </div>

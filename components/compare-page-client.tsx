@@ -11,17 +11,18 @@ import { PhoneImage } from '@/components/phone-image'
 import { formatDZD } from '@/lib/format'
 import { comparePhones } from '@/lib/api'
 import { MAX_COMPARE, useCompareSelection } from '@/lib/compare-store'
+import { useLanguage } from '@/lib/i18n/language-provider'
 import type { Phone } from '@/lib/types'
 
-const SPEC_ROWS: { key: keyof NonNullable<Phone['specs']>; label: string }[] = [
-  { key: 'display', label: 'الشاشة' },
-  { key: 'chipset', label: 'المعالج' },
-  { key: 'ram', label: 'الذاكرة العشوائية' },
-  { key: 'storage', label: 'التخزين' },
-  { key: 'battery', label: 'البطارية' },
-  { key: 'mainCamera', label: 'الكاميرا الرئيسية' },
-  { key: 'os', label: 'نظام التشغيل' },
-  { key: 'releaseYear', label: 'سنة الإصدار' },
+const SPEC_KEYS: (keyof NonNullable<Phone['specs']>)[] = [
+  'display',
+  'chipset',
+  'ram',
+  'storage',
+  'battery',
+  'mainCamera',
+  'os',
+  'releaseYear',
 ]
 
 function parseIds(raw: string | null): number[] {
@@ -36,6 +37,7 @@ function parseIds(raw: string | null): number[] {
 export function ComparePageClient() {
   const searchParams = useSearchParams()
   const { remove } = useCompareSelection()
+  const { dict } = useLanguage()
 
   const ids = parseIds(searchParams.get('ids'))
 
@@ -56,13 +58,13 @@ export function ComparePageClient() {
         if (cancelled) return
         setPhones(result)
         if (result.length < 2) {
-          setError('تعذر العثور على بيانات كافية لهذه الهواتف للمقارنة.')
+          setError(dict.comparePage.notEnoughDataError)
         }
       })
       .catch((err) => {
         if (cancelled) return
         console.error('comparePhones failed:', err)
-        setError('تعذر تحميل بيانات المقارنة حالياً. حاول مجدداً.')
+        setError(dict.comparePage.loadFailedError)
       })
       .finally(() => {
         if (!cancelled) setLoading(false)
@@ -86,18 +88,17 @@ export function ComparePageClient() {
         </span>
         <div>
           <h2 className="font-display text-lg font-bold text-foreground">
-            يرجى اختيار هاتفين على الأقل للمقارنة
+            {dict.comparePage.notEnoughSelectedTitle}
           </h2>
           <p className="mx-auto mt-2 max-w-sm text-pretty text-sm text-muted-foreground">
-            اذهب إلى قائمة الهواتف واضغط زر "مقارنة" على هاتفين أو أكثر، ثم اضغط "قارن الآن"
-            لعرض المقارنة هنا.
+            {dict.comparePage.notEnoughSelectedDescription}
           </p>
         </div>
         <Link
           href="/phones"
           className="gradient-primary mt-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
         >
-          تصفح الهواتف
+          {dict.comparePage.browsePhones}
         </Link>
       </motion.div>
     )
@@ -107,7 +108,7 @@ export function ComparePageClient() {
     return (
       <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
         <Loader2 className="size-6 animate-spin text-primary" aria-hidden="true" />
-        <p className="text-sm text-muted-foreground">جارٍ تحميل بيانات المقارنة...</p>
+        <p className="text-sm text-muted-foreground">{dict.comparePage.loadingComparison}</p>
       </div>
     )
   }
@@ -126,7 +127,7 @@ export function ComparePageClient() {
           href="/phones"
           className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground transition-colors duration-200 hover:bg-muted"
         >
-          العودة إلى الهواتف
+          {dict.phoneDetails.backToPhones}
         </Link>
       </motion.div>
     )
@@ -141,7 +142,7 @@ export function ComparePageClient() {
     >
       <div
         role="table"
-        aria-label="مقارنة الهواتف"
+        aria-label={dict.comparePage.tableAriaLabel}
         className="grid min-w-[640px] gap-x-4"
         style={{ gridTemplateColumns: `140px repeat(${phones.length}, minmax(180px, 1fr))` }}
       >
@@ -160,7 +161,7 @@ export function ComparePageClient() {
               >
                 <button
                   type="button"
-                  aria-label={`إزالة ${phone.model} من المقارنة`}
+                  aria-label={dict.comparePage.removeFromComparison.replace('{model}', phone.model)}
                   onClick={() => remove(phone.id)}
                   className="absolute end-2 top-2 rounded-lg p-1 text-muted-foreground transition-colors duration-200 hover:bg-destructive/10 hover:text-destructive"
                 >
@@ -191,19 +192,19 @@ export function ComparePageClient() {
 
         <div role="row" className="contents">
           <div role="rowheader" className="flex items-center border-t border-border/60 py-3 text-sm font-medium text-muted-foreground">
-            السعر
+            {dict.comparePage.priceLabel}
           </div>
           {phones.map((phone) => (
             <div key={phone.id} role="cell" className="flex items-center justify-center border-t border-border/60 py-3 font-display text-base font-bold text-primary">
-              {formatDZD(phone.price)}
+              {formatDZD(phone.price, dict.common.currency)}
             </div>
           ))}
         </div>
 
-        {SPEC_ROWS.map(({ key, label }) => (
+        {SPEC_KEYS.map((key) => (
           <div key={key} role="row" className="contents group/row">
             <div role="rowheader" className="flex items-center border-t border-border/60 py-3 text-sm font-medium text-muted-foreground transition-colors duration-150 group-hover/row:text-foreground">
-              {label}
+              {dict.phoneDetails.specLabels[key]}
             </div>
             {phones.map((phone) => (
               <div key={phone.id} role="cell" className="flex items-center justify-center border-t border-border/60 py-3 text-center text-sm text-foreground transition-colors duration-150 group-hover/row:bg-secondary/30">

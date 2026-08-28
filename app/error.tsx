@@ -17,7 +17,7 @@ export default function Error({
   reset: () => void
 }) {
   useEffect(() => {
-    console.log('[v0] Homepage error boundary:', error)
+    console.error('Homepage error boundary:', error)
   }, [error])
 
   return (

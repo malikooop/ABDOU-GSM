@@ -16,9 +16,8 @@ export function AbdouLogo({ className, logoUrl, siteName = 'ABDOU GSM' }: AbdouL
   return (
     <span className={cn('flex items-center gap-2.5', className)}>
       {logoUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element -- admin-
-        // uploaded, arbitrary external Storage URL; not a static/known
-        // asset next/image can optimize at build time.
+        // Admin-uploaded, arbitrary external Storage URL — not a
+        // static/known asset next/image can optimize at build time.
         <img
           src={logoUrl}
           alt={siteName}

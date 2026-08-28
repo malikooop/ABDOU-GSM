@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { NumericField } from "@/components/numeric-field";
 import { supabase } from "@/lib/supabase";
 import type { FileObject } from "@supabase/storage-js";
 
@@ -351,8 +352,8 @@ export default function EditPhonePage() {
         <section className="space-y-5">
           <h2 className="text-sm font-semibold text-foreground">الأسعار</h2>
           <div className="grid grid-cols-2 gap-6">
-            <div><label className={labelClass}>السعر الجديد</label><input type="number" lang="en" autoComplete="off" min="0" value={priceNew} onChange={(e) => setPriceNew(e.target.value)} className={inputClass} /></div>
-            <div><label className={labelClass}>السعر المستعمل</label><input type="number" lang="en" autoComplete="off" min="0" value={priceUsed} onChange={(e) => setPriceUsed(e.target.value)} className={inputClass} /></div>
+            <div><label className={labelClass}>السعر الجديد</label><NumericField min={0} step={1000} value={priceNew} onChange={setPriceNew} className={inputClass} /></div>
+            <div><label className={labelClass}>السعر المستعمل</label><NumericField min={0} step={1000} value={priceUsed} onChange={setPriceUsed} className={inputClass} /></div>
           </div>
         </section>
 
@@ -376,7 +377,7 @@ export default function EditPhonePage() {
             <div><label className={labelClass}>نظام التشغيل</label><input value={os} onChange={(e) => setOs(e.target.value)} className={inputClass} /></div>
             <div>
               <label className={labelClass}>سنة الإصدار</label>
-              <input type="number" lang="en" autoComplete="off" min="2000" max="2100" value={releaseDate} onChange={(e) => setReleaseDate(e.target.value)} className={inputClass} />
+              <NumericField min={2000} max={2100} value={releaseDate} onChange={setReleaseDate} className={inputClass} />
             </div>
           </div>
         </section>
