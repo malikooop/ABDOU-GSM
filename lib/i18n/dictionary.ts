@@ -29,6 +29,9 @@ export interface Dictionary {
     pickOneMore: string
     back: string
     currency: string
+    outOf10: string
+    increaseValue: string
+    decreaseValue: string
   }
      
 
@@ -200,6 +203,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
       pickOneMore: 'اختر هاتفًا واحدًا آخر على الأقل',
       back: 'رجوع',
       currency: 'دج',
+      outOf10: 'من 10',
+      increaseValue: 'زيادة القيمة',
+      decreaseValue: 'إنقاص القيمة',
     },
     hero: {
       badge: 'منصة جزائرية مستقلة لمقارنة الهواتف',
@@ -401,6 +407,9 @@ description3:
       pickOneMore: 'Pick at least one more phone',
       back: 'Back',
       currency: 'DZD',
+      outOf10: 'out of 10',
+      increaseValue: 'Increase value',
+      decreaseValue: 'Decrease value',
     },
     hero: {
       badge: "Algeria's independent phone comparison platform",

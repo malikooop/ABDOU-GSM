@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { LayoutDashboard, Menu, Settings, Smartphone, X, Image as ImageIcon } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
@@ -26,26 +26,19 @@ export default function AdminLayout({
   const [checkingAuth, setCheckingAuth] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  useEffect(() => {
-    checkAuth()
-
-    // Re-check on every auth state change, not just sign-out: if the
-    // session changes to a different (non-admin) account, the admin UI
-    // must not keep rendering under the old assumption.
-    const { data: listener } = supabase.auth.onAuthStateChange(() => {
-      checkAuth()
-    })
-
-    return () => listener.subscription.unsubscribe()
-  }, [])
-
-  // This mirrors the real boundary (middleware.ts + RLS on `profiles`),
-  // it does not replace it. A logged-out or non-admin request never even
+  // This mirrors the real boundary (proxy.ts + RLS on `profiles`), it
+  // does not replace it. A logged-out or non-admin request never even
   // reaches this component in normal navigation — this only covers the
   // case where a session's admin status changes *while* already on an
   // admin page (e.g. a revoked admin flag, or a stale client-side cache),
   // since only the server can be trusted for the first-load decision.
-  async function checkAuth() {
+  //
+  // Wrapped in useCallback (not a plain function declared after the
+  // effect) so it has a stable identity across renders: declared before
+  // the effect that calls it — no forward reference — and includable in
+  // that effect's dependency array without causing the effect to re-run
+  // on every render.
+  const checkAuth = useCallback(async () => {
     const { data } = await supabase.auth.getUser()
 
     if (!data.user) {
@@ -65,7 +58,20 @@ export default function AdminLayout({
     }
 
     setCheckingAuth(false)
-  }
+  }, [router])
+
+  useEffect(() => {
+    checkAuth()
+
+    // Re-check on every auth state change, not just sign-out: if the
+    // session changes to a different (non-admin) account, the admin UI
+    // must not keep rendering under the old assumption.
+    const { data: listener } = supabase.auth.onAuthStateChange(() => {
+      checkAuth()
+    })
+
+    return () => listener.subscription.unsubscribe()
+  }, [checkAuth])
 
   useEffect(() => {
     setSidebarOpen(false)

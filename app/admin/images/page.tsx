@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import type { FileObject } from "@supabase/storage-js";
 
@@ -153,7 +154,7 @@ export default function ImagesPage() {
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6">
           {filteredImages.map((img) => (
             <div key={img.name} className="group relative aspect-square overflow-hidden rounded-2xl bg-secondary/40">
-              <img src={publicUrl(img.name)} alt={img.name} className="h-full w-full object-cover" />
+              <Image src={publicUrl(img.name)} alt={img.name} fill unoptimized className="object-cover" />
 
               <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition-all group-hover:bg-black/40 group-hover:opacity-100">
                 <button onClick={() => copyLink(img.name)} className="rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground">

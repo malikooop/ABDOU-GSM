@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { formatNumber } from "@/lib/format";
 import LogoutButton from "@/components/LogoutButton";
@@ -152,11 +153,15 @@ export default function Dashboard() {
               {filteredPhones.map((phone) => (
                 <tr key={phone.id} className="border-t border-border transition-colors duration-150 hover:bg-secondary/40">
                   <td className="p-3">
-                    <img
-                      src={phone.image_url || "/placeholder.svg"}
-                      className="h-16 w-16 rounded-lg border border-border object-cover"
-                      alt={`${phone.brand} ${phone.model}`}
-                    />
+                    <div className="relative h-16 w-16 overflow-hidden rounded-lg border border-border">
+                      <Image
+                        src={phone.image_url || "/placeholder.svg"}
+                        alt={`${phone.brand} ${phone.model}`}
+                        fill
+                        unoptimized
+                        className="object-cover"
+                      />
+                    </div>
                   </td>
 
                   <td className="p-3">

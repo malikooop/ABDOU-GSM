@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
 import { NumericField } from "@/components/numeric-field";
 import { supabase } from "@/lib/supabase";
 import type { FileObject } from "@supabase/storage-js";
@@ -69,11 +71,13 @@ export default function EditPhonePage() {
   const [libraryImages, setLibraryImages] = useState<FileObject[]>([]);
   const [uploadingLibraryImage, setUploadingLibraryImage] = useState(false);
 
-  useEffect(() => {
-    loadPhone();
-  }, []);
-
-  async function loadPhone() {
+  // Wrapped in useCallback (not a plain function declared after the
+  // effect) so it has a stable identity keyed only on `id` — declared
+  // before the effect that calls it, and includable in that effect's
+  // dependency array without re-running on every render (the ~30 setter
+  // calls inside are all stable useState setters, so `id` is the only
+  // real dependency).
+  const loadPhone = useCallback(async () => {
     setLoading(true);
     setLoadError(null);
 
@@ -120,7 +124,11 @@ export default function EditPhonePage() {
     }
 
     setLoading(false);
-  }
+  }, [id]);
+
+  useEffect(() => {
+    loadPhone();
+  }, [loadPhone]);
 
   async function loadLibrary() {
     setLibraryLoading(true);
@@ -318,7 +326,9 @@ export default function EditPhonePage() {
           <h2 className="text-sm font-semibold text-foreground">الصورة</h2>
 
           {imageUrl ? (
-            <img src={imageUrl} alt="Phone" className="h-48 w-full rounded-2xl bg-secondary/40 object-contain p-4" />
+            <div className="relative h-48 w-full overflow-hidden rounded-2xl bg-secondary/40">
+              <Image src={imageUrl} alt="Phone" fill unoptimized className="object-contain p-4" />
+            </div>
           ) : (
             <div className="rounded-2xl bg-secondary/40 p-8 text-center text-sm text-muted-foreground">
               لا توجد صورة
@@ -352,8 +362,8 @@ export default function EditPhonePage() {
         <section className="space-y-5">
           <h2 className="text-sm font-semibold text-foreground">الأسعار</h2>
           <div className="grid grid-cols-2 gap-6">
-            <div><label className={labelClass}>السعر الجديد</label><NumericField min={0} step={1000} value={priceNew} onChange={setPriceNew} className={inputClass} /></div>
-            <div><label className={labelClass}>السعر المستعمل</label><NumericField min={0} step={1000} value={priceUsed} onChange={setPriceUsed} className={inputClass} /></div>
+            <div><label className={labelClass}>السعر الجديد</label><NumericField min={0} step={1000} value={priceNew} onChange={setPriceNew} className={inputClass} increaseLabel="زيادة" decreaseLabel="إنقاص" /></div>
+            <div><label className={labelClass}>السعر المستعمل</label><NumericField min={0} step={1000} value={priceUsed} onChange={setPriceUsed} className={inputClass} increaseLabel="زيادة" decreaseLabel="إنقاص" /></div>
           </div>
         </section>
 
@@ -377,7 +387,7 @@ export default function EditPhonePage() {
             <div><label className={labelClass}>نظام التشغيل</label><input value={os} onChange={(e) => setOs(e.target.value)} className={inputClass} /></div>
             <div>
               <label className={labelClass}>سنة الإصدار</label>
-              <NumericField min={2000} max={2100} value={releaseDate} onChange={setReleaseDate} className={inputClass} />
+              <NumericField min={2000} max={2100} value={releaseDate} onChange={setReleaseDate} className={inputClass} increaseLabel="زيادة" decreaseLabel="إنقاص" />
             </div>
           </div>
         </section>
@@ -385,16 +395,18 @@ export default function EditPhonePage() {
         <section className="space-y-5">
           <h2 className="text-sm font-semibold text-foreground">التقييمات (من 0 إلى 10)</h2>
           <div className="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4">
-            {[
-              ["Performance", scorePerformance, setScorePerformance],
-              ["Camera", scoreCamera, setScoreCamera],
-              ["Display", scoreDisplay, setScoreDisplay],
-              ["Battery", scoreBattery, setScoreBattery],
-              ["Value", scoreValue, setScoreValue],
-              ["Software", scoreSoftware, setScoreSoftware],
-              ["Features", scoreFeatures, setScoreFeatures],
-              ["Gaming", scoreGaming, setScoreGaming],
-            ].map(([label, value, setter]: any) => (
+            {(
+              [
+                ["Performance", scorePerformance, setScorePerformance],
+                ["Camera", scoreCamera, setScoreCamera],
+                ["Display", scoreDisplay, setScoreDisplay],
+                ["Battery", scoreBattery, setScoreBattery],
+                ["Value", scoreValue, setScoreValue],
+                ["Software", scoreSoftware, setScoreSoftware],
+                ["Features", scoreFeatures, setScoreFeatures],
+                ["Gaming", scoreGaming, setScoreGaming],
+              ] as [string, string, Dispatch<SetStateAction<string>>][]
+            ).map(([label, value, setter]) => (
               <div key={label}>
                 <label className={labelClass}>{label} ({value || 0})</label>
                 <input type="range" min="0" max="10" step="0.1" value={value} onChange={(e) => setter(e.target.value)} className="w-full accent-primary" />
@@ -466,10 +478,12 @@ export default function EditPhonePage() {
               <div className="grid grid-cols-4 gap-4">
                 {libraryImages.map((img) => (
                   <div key={img.name} className="group relative aspect-square overflow-hidden rounded-xl bg-secondary/40">
-                    <img
+                    <Image
                       src={imageUrlFromStorage(img.name)}
                       alt={img.name}
-                      className="h-full w-full cursor-pointer object-cover transition-transform group-hover:scale-105"
+                      fill
+                      unoptimized
+                      className="cursor-pointer object-cover transition-transform group-hover:scale-105"
                       onClick={() => pickFromLibrary(img.name)}
                     />
                     <button

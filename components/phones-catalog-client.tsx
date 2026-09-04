@@ -233,17 +233,19 @@ export function PhonesCatalogClient() {
                 onChange={setMaxPrice}
                 placeholder={dict.phonesPage.maxPricePlaceholder}
                 className={fieldClass}
+                increaseLabel={dict.common.increaseValue}
+                decreaseLabel={dict.common.decreaseValue}
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className={labelClass} htmlFor="filter-min-ram">{dict.phonesPage.minRamLabel}</label>
-                <NumericField id="filter-min-ram" min={0} step={1} value={minRam} onChange={setMinRam} placeholder="8" className={fieldClass} />
+                <NumericField id="filter-min-ram" min={0} step={1} value={minRam} onChange={setMinRam} placeholder="8" className={fieldClass} increaseLabel={dict.common.increaseValue} decreaseLabel={dict.common.decreaseValue} />
               </div>
               <div>
                 <label className={labelClass} htmlFor="filter-min-storage">{dict.phonesPage.minStorageLabel}</label>
-                <NumericField id="filter-min-storage" min={0} step={32} value={minStorage} onChange={setMinStorage} placeholder="128" className={fieldClass} />
+                <NumericField id="filter-min-storage" min={0} step={32} value={minStorage} onChange={setMinStorage} placeholder="128" className={fieldClass} increaseLabel={dict.common.increaseValue} decreaseLabel={dict.common.decreaseValue} />
               </div>
             </div>
 

@@ -23,6 +23,7 @@ interface Stats {
 
 const quickLinks = [
   { href: "/admin/phones/new", icon: "➕", label: "إضافة هاتف", color: "bg-primary/10 text-primary" },
+  { href: "/admin/phones/bulk-import", icon: "📥", label: "رفع جماعي", color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" },
   { href: "/admin/phones", icon: "📱", label: "إدارة الهواتف", color: "bg-blue-500/10 text-blue-600 dark:text-blue-400" },
   { href: "/admin/images", icon: "🖼️", label: "مكتبة الصور", color: "bg-violet-500/10 text-violet-600 dark:text-violet-400" },
   { href: "/admin/settings", icon: "⚙️", label: "إعدادات الموقع", color: "bg-amber-500/10 text-amber-600 dark:text-amber-400" },
@@ -196,6 +197,13 @@ export default function AdminPage() {
             latestPhones.map((phone) => (
               <div key={phone.id} className="flex items-center justify-between p-4">
                 <div className="flex items-center gap-4">
+                  {/* Kept as a native <img>, not next/image: this relies on
+                      an imperative `onError` handler that mutates
+                      `e.currentTarget.src` directly to fall back to a
+                      placeholder. next/image manages `src` itself, so
+                      reassigning the DOM node's src out from under it here
+                      would fight the component instead of degrading
+                      gracefully. */}
                   <img
                     src={phone.image_url || PLACEHOLDER_IMAGE}
                     alt={`${phone.brand} ${phone.model}`}

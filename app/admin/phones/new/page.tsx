@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { NumericField } from "@/components/numeric-field";
 import { supabase } from "@/lib/supabase";
 import type { FileObject } from "@supabase/storage-js";
@@ -212,8 +214,8 @@ export default function NewPhonePage() {
         <section className="space-y-5">
           <h2 className="text-sm font-semibold text-foreground">السعر</h2>
           <div className="grid grid-cols-2 gap-6">
-            <div><label className={labelClass}>السعر الجديد</label><NumericField min={0} step={1000} value={priceNew} onChange={setPriceNew} className={inputClass} /></div>
-            <div><label className={labelClass}>سعر المستعمل</label><NumericField min={0} step={1000} value={priceUsed} onChange={setPriceUsed} className={inputClass} /></div>
+            <div><label className={labelClass}>السعر الجديد</label><NumericField min={0} step={1000} value={priceNew} onChange={setPriceNew} className={inputClass} increaseLabel="زيادة" decreaseLabel="إنقاص" /></div>
+            <div><label className={labelClass}>سعر المستعمل</label><NumericField min={0} step={1000} value={priceUsed} onChange={setPriceUsed} className={inputClass} increaseLabel="زيادة" decreaseLabel="إنقاص" /></div>
           </div>
         </section>
 
@@ -237,7 +239,7 @@ export default function NewPhonePage() {
             <div><label className={labelClass}>نظام التشغيل</label><input value={os} onChange={(e) => setOs(e.target.value)} className={inputClass} /></div>
             <div>
               <label className={labelClass}>سنة الإصدار</label>
-              <NumericField min={2000} max={2100} placeholder="2026" value={releaseDate} onChange={setReleaseDate} className={inputClass} />
+              <NumericField min={2000} max={2100} placeholder="2026" value={releaseDate} onChange={setReleaseDate} className={inputClass} increaseLabel="زيادة" decreaseLabel="إنقاص" />
             </div>
           </div>
         </section>
@@ -254,25 +256,31 @@ export default function NewPhonePage() {
             </button>
           </div>
           {image && <p className="text-sm text-muted-foreground">{image.name}</p>}
-          {imageUrl && <img src={imageUrl} alt="الصورة المختارة" className="h-32 rounded-xl bg-secondary/40 object-contain p-2" />}
+          {imageUrl && (
+            <div className="relative h-32 w-32 overflow-hidden rounded-xl bg-secondary/40">
+              <Image src={imageUrl} alt="الصورة المختارة" fill unoptimized className="object-contain p-2" />
+            </div>
+          )}
         </section>
 
         <section className="space-y-5">
           <h2 className="text-sm font-semibold text-foreground">التقييمات (من 0 إلى 10)</h2>
           <div className="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4">
-            {[
-              ["Performance", scorePerformance, setScorePerformance],
-              ["Camera", scoreCamera, setScoreCamera],
-              ["Display", scoreDisplay, setScoreDisplay],
-              ["Battery", scoreBattery, setScoreBattery],
-              ["Value", scoreValue, setScoreValue],
-              ["Software", scoreSoftware, setScoreSoftware],
-              ["Features", scoreFeatures, setScoreFeatures],
-              ["Gaming", scoreGaming, setScoreGaming],
-            ].map(([label, value, setter]: any) => (
+            {(
+              [
+                ["Performance", scorePerformance, setScorePerformance],
+                ["Camera", scoreCamera, setScoreCamera],
+                ["Display", scoreDisplay, setScoreDisplay],
+                ["Battery", scoreBattery, setScoreBattery],
+                ["Value", scoreValue, setScoreValue],
+                ["Software", scoreSoftware, setScoreSoftware],
+                ["Features", scoreFeatures, setScoreFeatures],
+                ["Gaming", scoreGaming, setScoreGaming],
+              ] as [string, string, Dispatch<SetStateAction<string>>][]
+            ).map(([label, value, setter]) => (
               <div key={label}>
                 <label className={labelClass}>{label}</label>
-                <NumericField decimal min={0} max={10} step={0.1} value={value} onChange={setter} className={inputClass} />
+                <NumericField decimal min={0} max={10} step={0.1} value={value} onChange={setter} className={inputClass} increaseLabel="زيادة" decreaseLabel="إنقاص" />
               </div>
             ))}
           </div>
@@ -281,7 +289,7 @@ export default function NewPhonePage() {
           <div><label className={labelClass}>نقاط الضعف</label><textarea rows={3} value={weaknesses} onChange={(e) => setWeaknesses(e.target.value)} className={inputClass} /></div>
 
           <div className="grid grid-cols-2 gap-6">
-            <div><label className={labelClass}>تقييم ABDOU GSM</label><NumericField decimal min={0} max={10} step={0.1} value={abdouScore} onChange={setAbdouScore} className={inputClass} /></div>
+            <div><label className={labelClass}>تقييم ABDOU GSM</label><NumericField decimal min={0} max={10} step={0.1} value={abdouScore} onChange={setAbdouScore} className={inputClass} increaseLabel="زيادة" decreaseLabel="إنقاص" /></div>
             <div><label className={labelClass}>التوفر</label><input value={availability} onChange={(e) => setAvailability(e.target.value)} placeholder="Available" className={inputClass} /></div>
           </div>
 
@@ -321,13 +329,16 @@ export default function NewPhonePage() {
             ) : (
               <div className="grid grid-cols-4 gap-4">
                 {libraryImages.map((img) => (
-                  <img
-                    key={img.name}
-                    src={imageUrlFromStorage(img.name)}
-                    alt={img.name}
-                    className="aspect-square cursor-pointer rounded-xl bg-secondary/40 object-cover transition-opacity hover:opacity-80"
-                    onClick={() => pickFromLibrary(img.name)}
-                  />
+                  <div key={img.name} className="relative aspect-square overflow-hidden rounded-xl bg-secondary/40">
+                    <Image
+                      src={imageUrlFromStorage(img.name)}
+                      alt={img.name}
+                      fill
+                      unoptimized
+                      className="cursor-pointer object-cover transition-opacity hover:opacity-80"
+                      onClick={() => pickFromLibrary(img.name)}
+                    />
+                  </div>
                 ))}
               </div>
             )}

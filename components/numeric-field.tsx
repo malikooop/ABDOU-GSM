@@ -16,11 +16,22 @@ import { cn } from '@/lib/utils'
  *
  * This component sidesteps the whole problem: it's a `type="text"` field
  * (so the browser never reformats the value itself) with `inputMode` set
- * to bring up a numeric keyboard, and every keystroke is normalized —
- * Arabic-Indic/Persian digits mapped to ASCII, anything else stripped —
- * before it reaches the caller's `onChange`. The increment/decrement
- * buttons are custom (not the native spinner) so the stepping UX survives
- * the switch from type="number".
+ * to bring up a numeric keyboard, and every keystroke — typed OR pasted —
+ * is normalized through the same `sanitize()` path (Arabic-Indic/Persian
+ * digits mapped to ASCII, anything else stripped) before it reaches the
+ * caller's `onChange`. Because a paste also fires a change event with the
+ * pasted text already inside `e.target.value`, it goes through the exact
+ * same `sanitize()` call as typing — no separate paste handler needed,
+ * and no path where pasted Arabic-Indic digits can slip through
+ * unnormalized. Arrow Up/Down on the input itself mirror the native
+ * number input's keyboard stepping (native <input type="number"> supports
+ * this; losing it silently when switching to type="text" would be a real
+ * keyboard-accessibility regression, not just a cosmetic one). The
+ * increment/decrement buttons are custom (not the native spinner) so the
+ * stepping UX survives the switch from type="number", and their
+ * aria-labels are overridable via `increaseLabel`/`decreaseLabel` so
+ * bilingual callers can localize them instead of always announcing
+ * "Increase"/"Decrease" in English to a screen reader.
  *
  * The whole control is forced `dir="ltr"` regardless of page direction —
  * standard practice for numeric fields inside an RTL layout, so digits
@@ -37,6 +48,8 @@ export function NumericField({
   decimal = false,
   className,
   stepperClassName,
+  increaseLabel = 'Increase',
+  decreaseLabel = 'Decrease',
   'aria-label': ariaLabel,
 }: {
   id?: string
@@ -50,6 +63,12 @@ export function NumericField({
   decimal?: boolean
   className?: string
   stepperClassName?: string
+  /** aria-label for the increment button. Defaults to English; pass a
+   *  localized string (e.g. from `dict`) in bilingual contexts. */
+  increaseLabel?: string
+  /** aria-label for the decrement button. Defaults to English; pass a
+   *  localized string (e.g. from `dict`) in bilingual contexts. */
+  decreaseLabel?: string
   'aria-label'?: string
 }) {
   function sanitize(raw: string): string {
@@ -89,6 +108,20 @@ export function NumericField({
         spellCheck={false}
         value={value}
         onChange={(e) => onChange(sanitize(e.target.value))}
+        onKeyDown={(e) => {
+          // Native <input type="number"> responds to Arrow Up/Down —
+          // losing that when switching to type="text" would be a real
+          // regression for keyboard users, not just a cosmetic gap, so
+          // this mirrors the native behavior explicitly rather than
+          // relying on the (mouse/touch-only) stepper buttons below.
+          if (e.key === 'ArrowUp') {
+            e.preventDefault()
+            bump(step)
+          } else if (e.key === 'ArrowDown') {
+            e.preventDefault()
+            bump(-step)
+          }
+        }}
         placeholder={placeholder}
         aria-label={ariaLabel}
         className={cn(className, 'pr-7')}
@@ -98,7 +131,7 @@ export function NumericField({
           type="button"
           tabIndex={-1}
           onClick={() => bump(step)}
-          aria-label="Increase"
+          aria-label={increaseLabel}
           className={cn(
             'flex h-3.5 w-4 items-center justify-center rounded-sm text-muted-foreground/70 transition-colors hover:text-primary',
             stepperClassName,
@@ -110,7 +143,7 @@ export function NumericField({
           type="button"
           tabIndex={-1}
           onClick={() => bump(-step)}
-          aria-label="Decrease"
+          aria-label={decreaseLabel}
           className={cn(
             'flex h-3.5 w-4 items-center justify-center rounded-sm text-muted-foreground/70 transition-colors hover:text-primary',
             stepperClassName,

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { formatScore } from '@/lib/format'
+import { useLanguage } from '@/lib/i18n/language-provider'
 
 interface AbdouScoreProps {
   score: number
@@ -34,6 +35,7 @@ function scoreTone(score: number): string {
 
 /** Circular ABDOU SCORE badge (out of 10) with a subtle progress ring. */
 export function AbdouScore({ score, size = 'md', className, glow = false }: AbdouScoreProps) {
+  const { dict } = useLanguage()
   // Data can come from a nullable DB column (e.g. Supabase `abdou_score`),
   // so a caller passing `null`/`undefined`/NaN through as `number` is a
   // realistic scenario, not just a type-checker edge case. Without this
@@ -66,7 +68,7 @@ export function AbdouScore({ score, size = 'md', className, glow = false }: Abdo
         className,
       )}
       role="img"
-      aria-label={`ABDOU SCORE ${formatScore(safeScore)} من 10`}
+      aria-label={`ABDOU SCORE ${formatScore(safeScore)} ${dict.common.outOf10}`}
       style={
         {
           '--score-pct': `${animatedPct}%`,

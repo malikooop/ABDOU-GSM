@@ -102,6 +102,8 @@ export function AiTeaser({ phones }: { phones: Phone[] }) {
                   stepperClassName="text-background/50 hover:text-background"
                   placeholder={dict.aiTeaser.budgetPlaceholder}
                   aria-label={dict.aiTeaser.budgetLabel}
+                  increaseLabel={dict.common.increaseValue}
+                  decreaseLabel={dict.common.decreaseValue}
                 />
               </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 const inputClass =
@@ -28,16 +28,17 @@ export default function SettingsPage() {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
   useEffect(() => {
-    loadSettings();
-  }, []);
-
-  useEffect(() => {
     return () => {
       if (logoPreview) URL.revokeObjectURL(logoPreview);
     };
   }, [logoPreview]);
 
-  async function loadSettings() {
+  // Wrapped in useCallback (not a plain function declared after the
+  // effect) so it has a stable identity — declared before the effect
+  // that calls it, and includable in that effect's dependency array
+  // without re-running on every render. Takes no external params, so an
+  // empty dependency array is correct.
+  const loadSettings = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -62,7 +63,11 @@ export default function SettingsPage() {
     }
 
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    loadSettings();
+  }, [loadSettings]);
 
   function handleLogoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -152,6 +157,12 @@ export default function SettingsPage() {
         <section className="space-y-5">
           <h2 className="text-sm font-semibold text-foreground">الشعار</h2>
           {(logoPreview || logoUrl) && (
+            // Kept as a native <img>, not next/image: logoPreview is a
+            // `URL.createObjectURL(file)` blob — a local, ephemeral,
+            // memory-backed URL before the file is actually uploaded.
+            // next/image adds no value for a blob preview and blob: URLs
+            // are exactly the kind of one-off runtime value that doesn't
+            // belong behind an image pipeline.
             <img src={logoPreview || logoUrl} className="h-16 rounded-xl bg-secondary/40 p-2" alt="Logo" />
           )}
           <input type="file" accept="image/*" onChange={handleLogoChange} className={inputClass} />

@@ -68,7 +68,14 @@ export function SearchHero({ phones }: { phones: Phone[] }) {
           />
 
           <input
-            role="searchbox"
+            // A plain "searchbox" role doesn't support aria-expanded /
+            // aria-controls / aria-autocomplete per the ARIA spec — those
+            // belong to the "combobox" role. This input drives a live
+            // results popup (role="listbox" below, with role="option"
+            // items), which is exactly the WAI-ARIA "editable combobox
+            // with list autocomplete" pattern, so "combobox" is the
+            // correct role here, not a suppressed warning.
+            role="combobox"
             aria-label={dict.phonesPage.searchLabel}
             aria-expanded={showDropdown}
             aria-controls="search-hero-results"
